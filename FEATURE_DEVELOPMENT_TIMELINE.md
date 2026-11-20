@@ -241,6 +241,98 @@ Its compressed World Pool contains **10,877 player identities, 72,302 performanc
 
 ---
 
+
+# Part II — The longer development diary
+
+The nine chapters above provide the **chronological overview**. The following is the detailed account of the problems, experiments, corrections, unshipped ideas and design decisions behind them. Here “we” describes the project’s user-directed and AI-assisted iteration, not a claim that every line of inherited or generated code was personally authored unaided.
+
+## Diary 1 — June: the simulator we actually started with
+
+**The original game already worked.** The inspected 1 June 2026 source artifact is titled **CricSim v11.6**, with a filename referring to an **IPL 2026 v3** build. Its header says “Share this file freely.” It has a functional sidebar with **Home, Quick Match, Tournament, Teams & Squads, Archetypes, Match History, All-time Statistics and Documentation**. This is a much more informative starting point than a fictional story about creating a cricket simulator from an empty text file.
+
+A user could choose **T20, ODI, Test, T10, The Hundred or custom overs**, change pitch, weather and toss, select teams and their squads, apply quick conditions presets and simulate. The tournament page advertised **round robin, IPL league with playoffs, knockout, World Cup stages and Swiss**. Those were **already visible** in June; later versions made them safer, more realistic and more configurable rather than inventing them from scratch.
+
+The **player editor and rating guide** already had independent 1–20 batting and bowling skills and different batting and bowling styles. The batting archetypes included **Basher, Dasher, Technician, Anchor, Blocker and Pinch Hitter**. A batter could be more comfortable against pace or spin. The documentation described separate match formats, batting gears and bowling-phase preferences. The basic fantasy premise was already here: choose a cricket world, edit its people, and let the match engine decide the cricket.
+
+The home screen even contained a mini-changelog from **v10.1**. An earlier scoring system had used separate scoring and wicket passes with scalar multipliers. The revised **Pitch × Bowler Type** outcome tables treated a dot, single, two, three, boundary, six and wicket as competing outcomes in one ball-level distribution. Bowler and batter quality shifted those weights. Spinners were preferred on turners, pacers on seam-friendly tracks; run-out ends, late-chase urgency and extras had specific rules. These were inherited/earlier foundations; October calibration refined them.
+
+**But the limits were structural.** The June database used browser local storage for teams, matches, global statistics and tournaments. The implementation wrote only the **last 100 Quick Match records** on save. It was possible to share the HTML file while leaving the actual cricket universe behind in a particular browser profile. The gap between a **portable game** and **portable saves** would become increasingly serious as tournaments and commentary produced larger records.
+
+### The owner's early philosophy was unusually specific
+
+The June 1 conversation described **improving an existing/acquired cricket simulator**. The user wanted real source changes, not general advice; Test, ODI and T20 had to be audited with evidence, not assumed correct. Manager-edited skills and ratings must remain editable even when seasons were underway.
+
+On **2 June**, the owner expressly rejected **automatic ageing, career progression, involuntary regression, retirement and hidden rating changes**. This wasn't opposition to cricket rules governing a batter retiring hurt; that match-law feature arrived much later. It was opposition to the game hijacking a commissioner’s roster over time. The player and league would be a manually curated simulation universe, not an automatic football-manager-style ageing engine.
+
+Another foundational distinction was that **tournament/edition stats are not the same as global career totals**. Later work on canonical identities, tournament families, historical editions and scoped statistical tables comes directly from this requirement.
+
+The June build also explains why a plan to **rewrite the whole game** would have been wasteful: there was already a deep cricket engine and several working modules. The challenge was to preserve that investment while improving what could be tested and trusted.
+
+**Evidence boundary:** the v11.6 file proves what the controls, architecture and documentation contained. It doesn't certify every early format, option or tournament path through a modern browser regression. We do not have the first May prototype or a complete contemporary list of who authored the inherited base.
+
+## Diary 2 — July and August: trying to understand cricket at world scale
+
+Two parallel ideas develop in the available July evidence: **research the actual cricket structure** and **make a growing codebase maintainable**.
+
+### The world-cricket research work was not the same as a roster import
+
+On **19 July**, an archived Volume 1 of a **World Cricket Research Project** covered the ICC and India. Its scope was official bodies, associations, membership, development pathways, domestic and franchise competitions, active versus defunct tournaments and what their structures actually meant. The user wanted one **continuous research document**, developed in phases, rather than scattered summaries or a fabricated database.
+
+This mattered later. A cricket simulator that understands only “ten teams play round robin” cannot accurately represent Ranji Elite/Plate, County divisions, qualification through multiple stages, different cup structures, championship groups, a changing IPL fixture count or a franchise that changes identity. Competition administration has history. Team identities persist even when they leave an edition. A player can be in multiple distinct squads across formats and eras.
+
+That July research should be described as **a documentary precursor** to the World Pool and Competition Atlas, not as proof that every national/domestic tournament was playable in July.
+
+### The source-management problem began early
+
+An archival inventory records a **modular-source package dated 19 July** and a **patched modular package dated 26 August**. That supports a source-organization lineage before October’s GitHub branching. The inventory does not say what exact August bug the latter fixed, so the timeline doesn't invent one.
+
+The design pressure was clear: preserve a **single self-contained HTML file for players**, but make source chapters, changes and tests inspectable for developers. We could not responsibly edit a multi-megabyte code file by pasting arbitrary fragments and hope nothing else changed. Eventually the repository would maintain ordered source chapters, parent-file checksums, byte-for-byte reassembly and seeded match parity.
+
+### A subtle problem was already forming
+
+“World Pool” could mean many different things: all players ever recorded in Cricsheet, contemporary IPL squads, profiles separated by year, verified bowling styles, a catalogue of real competitions, or the actual current team selected by a user. Those are **not interchangeable**. Later source research would uncover player identity ambiguities, incomplete season memberships, generic bowling metadata and unsupported 2026/27 rosters. The desire for breadth and the duty not to invent facts often pulled in opposite directions.
+
+The early months therefore gave CricSim two permanent responsibilities: **respect the cricket domain** and **preserve the user's editable state**. Every major October/November subsystem can be read as a more exact expression of one of those responsibilities.
+
+## Diary 3 — September: why matching 185 runs was not enough
+
+The biggest shift in the project's methodology was moving from “this result seems plausible” to **empirical distributions, same-seed comparisons and whole-season behaviour**.
+
+A simulator may average 185 in T20 while getting there with too many dots and fours, too few singles and twos, too many all-outs or impossibly durable century-makers. A plausible ODI total may mask badly wrong powerplay and death-over patterns. A Test may score the expected runs but never draw because its session clock, declaration decisions and second-new-ball handling are wrong.
+
+### V16 — reconstructing how runs happen
+
+Cricsheet delivery archives provided reference distributions for **dots, singles, twos, boundaries, wickets and extras**. Earlier outcomes were too often a pattern of dot, boundary, dot, wicket. The goal was not to “add a few runs” but to make innings accumulate like actual cricket.
+
+The V16 report describes **100 complete IPL seasons: 7,400 matches, 14,800 innings**. It reported **187.4** average first-innings runs versus **188.5** in the pooled 2023–26 IPL reference. That sounds close—until the same audit showed **11.4% all-outs versus 7.5%**, and **36.2% 200+ scores versus 41.3%**. Matching an average was merely the start of a calibration decision.
+
+### V17/V18 — the difference between a hot team and an immortal player
+
+A 240-run innings can be produced through several batters accelerating. It does not require one mid-rated opener to routinely finish on 150 not out. Orange Cap and Purple Cap tails, hundreds, fifties, 50-to-100 conversion, No. 10 in the batting leaderboard and individual wicket hauls had to be tested separately from team totals.
+
+The V18 audit ran **three independent thirty-season samples**, or **90 IPL seasons / 6,660 matches**. It documented leader distributions, including Orange Cap winners averaging **762.2** and the Purple Cap leader averaging **27.5 wickets**. The upper tail remained sensitive to innings structure and player participation. Overdoing a global batting boost could fix an innings average while making leaders absurd.
+
+### V19–V22 — rebuilding ODI realism on its own terms
+
+**V19** used **1,200 seeded ODIs** across four seeds, tracking 5.771 RPO, century frequency, bowling hauls and innings distributions. That was useful, but its small synthetic team pool was not identical to a real World Cup field.
+
+The **V20/V21** work separated player-quality packs, ODI lineup construction, specialist death bowling, batting-order survival and the difficulty faced by pure bowlers. It found two distinct failures: middle-order batters at Nos. 5–8 sometimes disappeared too quickly, while Nos. 9–11 could score too freely. Their solutions needed to be different. Weak part-time death bowlers were another problem; the engine needed to reserve enough specialist overs, not blindly spread the ball around.
+
+**V22** isolated the **team high-score tail** and the **individual long-innings tail**. Thirty 45-match ODI tournament runs checked 300+, 350+, hundreds, 150+ scores and leader totals against the 2019/2023 World Cup archive. In the final V22 cohort, first-innings 300+ and 350+ frequencies were **46.7% and 21.4%**, compared with reference **48% and 20%**. The model still overproduced fifties and all-outs. Attempts to add generic nervous-forties pressure, indiscriminate 120+ batter protection, a heavy 320+ chase penalty or blanket No. 11 nerfs were **rejected after tests**.
+
+### The Test problem couldn't be solved by applying white-ball logic
+
+Early Test audits measured innings lengths, draw rates, sessions, follow-ons, declarations, 50s/100s/150s/200s, and how frequently the fourth-innings chase actually mattered. There were provisional three-team baselines with unrealistic draw/declaration patterns, so we didn't use them to force ratings. The later red-ball work would differentiate 3-, 4- and 5-day matches and historical eras.
+
+### A new acceptance rule: protect everything you didn't intend to change
+
+Format-specific regression tests appeared across v11.17–v11.22. One recurring dry-game guard contained **630 IPL, 623 T20I and 213 ODI fixtures per version**. A change to ODI death overs shouldn't alter an unrelated T20 match. A commentary change shouldn't introduce one extra RNG draw and cause the scoreboard to diverge. This test discipline was repeated across candidates; a repeated fixture family was **not** fresh independent cricket evidence simply because it was rerun in a new version.
+
+By late September, CricSim had begun to behave like a serious simulation project: **real data for calibration, whole seasons for failure detection, and exact match parity to protect established behaviour**.
+
+
+---
+
 ## Evidence and dating notes
 
 The main October/November dates are grounded in dated **v11.63–v11.98 validation reports**, **v12 RC/P8–P12 development records**, and the **89 current branch-tip / 68 PR** inventory of the private HFCricSim repository. The early June foundation is recorded in historical conversations and an engineering dossier; the July/August dates come from archival source-file inventory. The September-to-November testing history is separately documented in **[Validation History](./VALIDATION_HISTORY.md)**.
