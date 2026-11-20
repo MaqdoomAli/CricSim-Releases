@@ -62,7 +62,7 @@ The simulator was compared with supplied **Cricsheet ball-by-ball records** rath
 
 ## What these results do—and do not—prove
 
-**They support:** Years of work on scorebook consistency, multiple formats, tournament completion, fixture fairness, real-ball match execution, statistical calibration, save-fidelity testing and rare-rule regressions. Many tests were repeated because features, rules, structures and source builds changed.
+**They support:** Extensive work on scorebook consistency, multiple formats, tournament completion, fixture fairness, real-ball match execution, statistical calibration, save-fidelity testing and rare-rule regressions. Many tests were repeated because features, rules, structures and source builds changed.
 
 **They do not prove:** That all earlier historical cases passed again on the **exact Alpha 1.4 public build**, that all Cricsheet distributions match perfectly, that every historical squad is accurate, that every optional special format shares the same injury system, or that a genuinely large save has been copied to another PC and restored under all conditions.
 
