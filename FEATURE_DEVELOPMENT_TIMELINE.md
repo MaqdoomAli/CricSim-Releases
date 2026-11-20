@@ -430,6 +430,122 @@ This requirement produced an enduring design rule: **freeze factual pre-match co
 By the start of October, features that once appeared separate—rain, bowling order, player data, domestic competitions, tournament editions, commentary—were revealed to be **one connected state system**. A complete match required the correct squad membership, legal playing XI, conditions, captain decisions, ledger, scorecard, standings and archive. The more CricSim resembled real cricket, the more important its internal consistency became.
 
 
+
+## Diary 5 — 9–13 October: the most intense branching period
+
+The private repository history creates a trap for anyone making a simple timeline: **many branches were created or imported into GitHub on 9–11 October**, but that does not mean all the underlying development happened in those three days. The correct chronology follows the implementation lineage and dated reports, not just the PR creation timestamp. Several branches are experiments, some are archived, others are source-copy or transport branches, and a number never became an installed stable build.
+
+This was also the point at which the project chose **stable v11.66 as its fallback**. We were free to explore aggressively, as long as experiments didn't overwrite the known working HTML or corrupt personal cricket universes.
+
+### Session/day match reports: solve a human storytelling problem with saved events
+
+The user wanted to publish a Test or first-class match **session by session** on a forum without having to stop and resume the simulator. The obvious naïve solution—simulate to lunch, save, publish, then resume—would introduce massive complexity in random number state, batting partnerships, bowler spells, Test time, weather and declarations.
+
+**v11.63** used a better idea. **Simulate the whole match once**, then derive a retrospective report for Day 1 morning, Day 1 full day, Day 2 afternoon or whichever saved interval was requested. Reconstruct a *provisional* batting/bowling/extras/FoW scorecard using only deliveries that had occurred by the period end. Never copy a completed scorecard backward in time. An early session must not mention the future century, declaration or final result.
+
+If an old saved match lacks an adequate delivery ledger or match clock, the game should say the report is unavailable rather than invent its missing past. This was a major shift toward **event-sourced publishing**: a match's saved deliveries become the authoritative source for many views.
+
+### v11.64: even a correction requires rules and a history
+
+Managers sometimes discover a genuine selection error after a match: perhaps a bowler was missing from the designated XI or an eligible bowler was given the wrong permissions. Users needed a recovery path, but an unlimited Undo/Resimulate would allow undesirable “roll until my team wins” behaviour and break downstream qualifications.
+
+**v11.64** created a **single audited correction** for the latest eligible ordinary league fixture. The commissioner had to make a genuine XI or bowling-intent change and provide a reason. The old and new results remained in an audit history. Complex dependent brackets and Test/FC fixtures remained locked until the effects could be safely reconciled.
+
+**v11.69** later fixed a related UX problem: reordering the batting XI could be a genuine correction, but the modal treated the same eleven names in a different order as no change. Up/down batting-order controls and order-sensitive validation made the exceptional correction usable without creating a regular reroll button.
+
+This is also where the **commissioner preflight** and **match-ledger auditor** appeared as independent pure modules. They could inspect a XI or delivery record without needing to run another cricket match. Invalid selections should be explained clearly *only when invalid*, not flood every normal pre-match screen with warnings.
+
+### v11.65: commentary should be vivid without lying
+
+The earlier commentary overhaul aimed to make two consecutive overs feel different because the match situation differed. It could reference a maiden building pressure, the last boundary, the ongoing partnership, an ODI's changing equation or a Test batter surviving to tea.
+
+But the implementation was not allowed to **consume fresh outcome RNG**, alter a bowler's figures, change the run count, invent a fielder or turn “went for four” into a physically false description. Same-seed browser comparisons across T10, Hundred, T20, ODI, FC and Test established that scoring outcomes stayed fixed while narration changed.
+
+The lesson survived through P8: **better writing cannot be purchased by rewriting cricket history**.
+
+### v11.66: a genuine stable checkpoint after serious defects
+
+An invalid custom final with four named entrants had once generated a single two-team fixture and discarded the others without warning. That is a catastrophic bug for a custom league even though the individual match engine is perfectly fine.
+
+The **v11.66** graph validation began rejecting impossible entrants, duplicate transition IDs, invalid qualification slots, repeated ranks and stage completion while a match remained unplayed. It also corrected a subtle statistics problem: a fixture assigned to Division 1/2, Elite or Plate could carry a generic stage tag and therefore **disappear from division-specific player statistics**.
+
+The branch ran seven domestic structures through controlled outcomes and **30 consecutive County Championship editions with 3,780 controlled fixtures**. A separate **998-match, 54-edition, 313,975-legal-ball** real-engine test audited scorecards, bowling, extras and reconstructable player totals. These are different kinds of proof and must stay distinct.
+
+**Stable v11.66** was not the end of development; it was the baseline that made deeper experiments survivable.
+
+### Save experiments: from a giant JSON to recoverable records
+
+Two persistence problems were appearing simultaneously:
+- The old browser-origin save data could be lost or inaccessible on another PC.
+- Full-universe backups grew dramatically when commentary and detailed historical match events were included.
+
+**v11.67** explored compressed, multipart, lossless universe archives. A 308-match / 31-edition source record collection of roughly 127.81 MiB compressed to roughly 14.01 MiB and decoded with matching records in an in-memory test. A much larger real-engine archive hit a **180-second serialization timeout**, demonstrating that correctness alone isn't enough if exporting an enormous universe freezes.
+
+**v11.68** explored staged extraction from IndexedDB, segmented compressed archives and atomic restore. A synthetic experiment with **54 editions and approximately 504 MB of very repetitive source text** completed an actual browser-process close/reopen with 54/54 SHA-256 record matches; its seven compressed parts were far smaller. That was encouraging durability engineering, **not proof that arbitrary 504 MB real scorecard histories transfer quickly**.
+
+Later RC6–RC9 and Alpha 1.4 work inherited this understanding: check that a transaction committed, read data back, preserve old records until verification, distinguish a valid backup from a merely clickable Download button, and never silently erase the user's only copy.
+
+### Cricket laws: the Hundred and T10 were not miniature T20s
+
+**v11.70** came from a concrete user-supplied match report: Jasprit Bumrah had been credited with **25 legal balls in The Hundred** when the applicable maximum was 20; a T10 bowler exceeded his legal quota; and a wicketkeeper was simultaneously assigned an outfield catch.
+
+Those were **actual laws and scorer integrity defects**. The correction enforced format-specific bowling caps, active wicketkeeper placement, single keeper designation, coherent caught-fielding descriptions and accurately calculated scorecards/FoW. It also fixed a built-in Ravi Bishnoi profile incorrectly using seam rather than leg-spin without overwriting manual edits.
+
+**v11.71** hardened rain-reduced bowling quotas and wicketkeeper exclusions across scripted T20/ODI games. The general rule became: when the attack runs out of a legal bowler, **fail visibly or choose a lawful backup**, not quietly let an illegal spell happen.
+
+### Sixes and Beach Cricket were a separate domain
+
+**v11.72–v11.73** explored Hong Kong Sixes and Beach Cricket, where ordinary eleven-player expectations do not apply. Hong Kong Sixes rules differ by edition. Archived 2024 pre-event announcements did not fully match actual played scorecards; we corrected the **played 2024 and 2025 rulepacks** to their evidenced 6×6-over arrangements and labelled preliminary proposed formats as announcement-only variants.
+
+The Beach Cricket experiment included a small illustrative 2D field, sand-slowed running-ball behaviour, fixed-end/pair and one-handed-catching/boundary-deduction rules. The field sizes and coefficients were explicitly **engineering assumptions**, not surveyed historical measurements or a full physics engine.
+
+These formats gained separate scorekeeping and real playtest interest, but were not given a free pass to ignore rare laws. They later required special handling in forum exports, fixtures and (still pending in Alpha 1.4) the general injury system.
+
+### Flexible mixed-format series changed tournament architecture
+
+A user requirement drove the v11.74 branch: **“Give me two Tests, three ODIs, five T20s, three Hong Kong Sixes and one Beach match in the same series.”** Historical national squads were not meant to be a precondition; the manager could create their own teams.
+
+That required a new fixture concept: each match has **its own format, rules, scoring and innings record**, while sharing a meaningful overall series identity. Test has four possible innings; Sixes has its own dismissals and retirement convention; Hundred has five-ball sets. A record schema cannot flatten all of those into two ordinary T20 innings without losing information.
+
+**v11.75** expanded bilateral series into **3–20-team mixed-format competitions** with groups, rounds, knockouts, changing fixture rules and winner advancement. Points, wins, head-to-head and specified seed policy were kept distinct from unsupported all-format NRR. Matches were not re-simulated to fix inconvenient tournament outcomes.
+
+The most important philosophical requirement came from the user: **CricSim should implement the commissioner's chosen tournament rules, not silently impose its own notion of fairness**. If someone chooses unequal groups and asymmetric qualification, the game should support it if logically valid—or explain exactly why it can't.
+
+### v11.76–v11.78: the custom tournament graph versus a usable editor
+
+The structural v11.76 qualification matrix exercised hundreds of competition configurations and **23,637 controlled/stubbed fixtures**. That proves graph wiring, not 23,637 simulated wickets, overs and scorecards.
+
+**v11.77** added planning for arbitrary 2–20 qualifier slots, bracket byes and downstream knockout fixtures. Yet the visual creator was still too technical: root entrant IDs, group stages and transitions demanded knowledge of the underlying graph model.
+
+The **v11.78 Visual Architect** tried to repair that UX: choose teams inside the wizard, create named groups, redistribute entrants, declare per-group qualification routes, validate and **Apply & Create Tournament**. It used real IDs and guarded impossible three-way duels.
+
+Then its Windows builder failed on **multiple closing body markers** embedded as JavaScript text in the large HTML. The repair changed the source-insertion validator, not the cricket engine. The candidate had source and fake-DOM tests, but actual Windows file-opening acceptance still mattered. This episode captures a repeating project pattern: **a powerful feature is not finished if its installation and creation flow are confusing or broken**.
+
+### v11.79–v11.82: a huge data catalogue exposes a UI problem
+
+The game had hundreds of teams, thousands of players and hundreds of tournament definitions. A hidden source limit displayed only the first 100 teams, 150 competitions or 200 player identities in some screens. A user could have an existing team that was simply **impossible to reach** using a long scrolling interface.
+
+**v11.79** introduced category/country/competition filters, pagination, current national/full-member prioritisation and a unified team finder for World Pool, Teams & Squads, Quick Match and tournament creation. Chromium tests exercised **436 teams across nineteen pages**, including final-page selection. The earlier 42-page UI screenshot report was evidence of the problem, not a desirable browsing experience.
+
+**v11.80–v11.82** investigated UI themes and presentation variants: Floodlights, Heritage Blue, Clear Skies, Broadcast, Pavilion, Studio and a hybrid read-only bridge to actual saved game state. Some were **design candidates**, not final live pages. The owner wanted the application beautified without hiding information or inventing disconnected mockups. This is why later Match Centre work focused on **real scorecards, fixture lists and navigation**, not decorative screenshots.
+
+### v11.83–v11.90: correct the players without inventing facts
+
+The World Pool eventually included **10,877 identities, 72,302 performance profiles, 415 teams, 3,295 squad snapshots and 342 tournament records**. Data scale brought the risk of looking authoritative while silently storing default metadata as fact.
+
+The generic importer had labelled thousands of unverified batting hands as right-handed, and countless bowling profiles as right-arm seam. That wasn't a minor display error: the **bowling family can change match-engine behaviour**, especially pace/spin/pitch matchups. Players such as real spinners could bowl as seamers in the simulation.
+
+**v11.83** introduced explicit **unknown batting hand** and conservatively neutral matchup effects where research was insufficient. The verification work that followed checked bowling arm, spin family, birthdates, keeper roles, aliases and exact Cricsheet identities against more than one independent source.
+
+Some fixes were clear and material: wrongly recorded bowling arms, dual-spin roles, left-arm orthodox rather than off-spin, and removing frontline bowling eligibility from wicketkeepers with no proven actual bowling. Names like **Narine, Markram, Shreyas, Tim David, Ishan Kishan, Rizwan and Pooran** became examples of why one coarse generic role label was inadequate. Some cases, including Surya's bowling family or conflicting player histories, remained unresolved rather than guessed.
+
+A proposal to research **400 players** ran into provenance limits. Not every staged identity had independent corroboration; the large all-or-nothing gate was **not** passed. It was superseded by **100-player B001 batches**, where **100 identity/batting-hand records and 90 bowling roles** were corroborated while ten bowling cases remained open.
+
+The owner explicitly required **individual 2–3-source checks**. A broad unknown-to-right-handed migration was rejected. This data-quality discipline was critical: an accurate cricket match simulator needs a trustworthy person, role and squad before its sophisticated ball engine can mean anything.
+
+**What October 9–13 established:** a stable fallback, an event-derived reporting model, audited commissioner authority, stronger laws, scalable backups, cross-format competitions, a usable creator, and a conservative approach to cricket identity data. It also proved why development branches, source tests and final gameplay releases must be kept separate.
+
+
 ## Evidence and dating notes
 
 The main October/November dates are grounded in dated **v11.63–v11.98 validation reports**, **v12 RC/P8–P12 development records**, and the **89 current branch-tip / 68 PR** inventory of the private HFCricSim repository. The early June foundation is recorded in historical conversations and an engineering dossier; the July/August dates come from archival source-file inventory. The September-to-November testing history is separately documented in **[Validation History](./VALIDATION_HISTORY.md)**.
