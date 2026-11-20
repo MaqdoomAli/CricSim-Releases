@@ -6,6 +6,8 @@
 
 **Platform:** Offline HTML game for PC browsers (Chrome / Edge recommended) · **Status:** Public alpha playtest · **No installation or account required**
 
+**[How we built CricSim: May–November feature timeline](https://github.com/MaqdoomAli/CricSim-Releases/blob/main/FEATURE_DEVELOPMENT_TIMELINE.md)** · [Development stress-test history](https://github.com/MaqdoomAli/CricSim-Releases/blob/main/VALIDATION_HISTORY.md)
+
 
 ## What is CricSim?
 
