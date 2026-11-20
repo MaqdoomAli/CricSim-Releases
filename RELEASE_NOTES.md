@@ -18,6 +18,10 @@
 
 The **25-season / 1,850-match IPL run** was the **latest** stress test, not the project's only one. Earlier documented audits include:
 
+- **V22:** 30 full 45-match ODI tournaments (1,350 matches) testing batting/bowling leaders and team-scoring tails, with unresolved excess fifties and all-outs.
+- **Phase 2U:** Seven pitch surfaces tested with 2,240 simulated first innings; 77-match English One-Day Cup and 63-match Sri Lankan FC seasons; plus a 30-seed BPL season-leader audit.
+- **v11.96:** 48 synthetic 70-match T20 leagues (3,360 fixtures) comparing season leader tails across 2006, 2015 and 2026.
+- **v11.97:** 864 complete red-ball matches across both baseline and candidate, testing captaincy defaults, batting depth, durations and weather.
 - **V16:** 100 full IPL seasons — **7,400 matches / 14,800 innings**, with calibration against IPL Cricsheet. The run exposed excess all-outs and too few 200+ scores.
 - **V18:** 90 IPL seasons — **6,660 matches** measuring Orange/Purple Cap leaders, century rates and freak individual innings.
 - **V19:** **1,200 seeded ODIs** to measure scoring phases, century rates and wicket hauls.
@@ -29,7 +33,7 @@ The **25-season / 1,850-match IPL run** was the **latest** stress test, not the 
 - **Cricsheet calibration:** v11.17 used 660 simulated ODI matches against a 66-match real current-rule ODI cohort. Earlier Test session/weather and specialty format suites added further focused simulations.
 - **Save durability:** An in-memory 308-match/31-edition archive fidelity test passed; a roughly 504 MB older full-universe export **timed out**, and actual PC-to-PC restore remains a public playtest target.
 
-**These tests span different versions and test types, so do not treat the figures as one cumulative match count or as certification of the exact Alpha 1.4 build.** Calibrating realism is ongoing, especially 12/20-rated batting outliers and 9–10/20-rated bowling workloads.
+**These tests span different versions and test types, so do not treat the figures as one cumulative match count or as certification of the exact Alpha 1.4 build.** The historical evidence audit covered 89/89 current private-repository branch trees and 68 available PR records, without running new tests. Calibrating realism is ongoing, especially 12/20-rated batting outliers and 9–10/20-rated bowling workloads.
 
 [**Read the expanded September–November stress-test and calibration history**](./VALIDATION_HISTORY.md), including repeated-run cautions and unsuccessful tests.
 
