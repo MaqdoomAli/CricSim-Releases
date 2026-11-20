@@ -333,6 +333,103 @@ By late September, CricSim had begun to behave like a serious simulation project
 
 ---
 
+
+## Diary 4 — Late September to 8 October: cricket laws, captaincy, identities and domestic seasons
+
+September produced two competing priorities: **fine-tune scoring distributions** and **make the rest of the simulator behave like the sport**. An excellent probability model still fails if the bowling captain ignores workloads, weather produces illegal innings lengths, scorecards miss wickets, or a Test never sees a proper change of session.
+
+### Venues became cricket environments rather than names
+
+The **v11.13 Test venue** effort used regional and venue-specific evidence to assign home-ground pools to the twelve ICC full-member national teams. Missing grounds were added, including Perth Stadium, Galle, SSC Colombo, Sylhet, Chattogram, Bay Oval, Queens Sports Club, Stormont and Sir Vivian Richards Stadium. Venue pitch identity was treated conservatively: an aggregate match average doesn't automatically reveal whether a ground helps finger spin, wrist spin, swing or pace.
+
+A later **v11.20** venue/new-ball bundle extended the context to day/night conditions and the **second new ball** in multi-day cricket. The idea was not simply to add cosmetic controls; the effects needed to apply at appropriate innings times and preserve established match outcomes when those conditions were absent.
+
+This research exposed an unresolved tension that would survive: if an era, a pitch, a venue and a bowler type each change scoring, their effects can multiply into something extreme unless bounded and tested together. Later Phase 2U pitch matrices explicitly corrected cases where a spinning/green ODI pitch scored *more* runs than neutral.
+
+### Rain became a full match-state problem
+
+By the time **v11.28** arrived, the engine already had manual rain/Duckworth/Lewis concepts, but optional **automatic weather and multiple interruptions** added more difficult state transitions. A match can have rain before the first ball, during the first innings, between innings, or during a chase. There are legal-over thresholds, revised targets and bowling quotas that must be repaired when the innings is cut short.
+
+The v11.28 report describes weather probability profiles derived from recent Cricsheet match interruptions: a broad T20 baseline of roughly **5.6%**, ODI **10.2%**, modified by regional weather. Its stress trials included **5,000 clear T20**, **5,000 humid-ground T20**, **3,000 clear ODI** and **3,000 overcast ODI** weather cases, with event chains and no-result shapes tracked. The dry-scoring system was purposely not reopened; 60 ODI, 60 T20 and 12 complete Test seeded matches matched their preceding build with dynamic weather disabled.
+
+An important distinction remained: **Standard Duckworth/Lewis resource tables** were implemented, not the licensed professional DLS calculator used in televised modern international cricket. Automatic weather stayed off by default. This is an example of doing a bounded feature well instead of advertising a rule model we didn't possess.
+
+### Super Overs needed a proper historical record
+
+Early versions could decide a Super Over winner without preserving every delivery of the extra innings. **v11.28** retained its scorecard, commentary, legal and illegal deliveries, bowlers, wickets and partnerships, so that a viewer or publisher could reconstruct why a tie was broken. A 50-seed parity audit showed the same winners and rounds while changing **record retention**, not the resolution itself.
+
+That distinction—**play the event once, store what occurred, generate readable views later**—eventually became the principle behind the Match Centre, session/day reporting and forum publisher.
+
+### Bowling selection stopped being a black box
+
+The **v11.34–v11.36** series dealt with a recurring mismatch: the manager could pick an XI and approve an attack, then the *bulk tournament simulator* might select or rotate bowlers differently from a Quick Match.
+
+The solution was to make the two paths share the same **Auto XI** logic and preserve **Shall Bowl / Can Bowl** intent. Shall Bowl identifies expected primary bowling resources; Can Bowl is a legitimate fallback, not a signal that a batter should suddenly bowl four overs before the specialists. Phase preferences—powerplay, middle, death—matter, as do wicketkeeping, batting depth and bowler workload legality.
+
+In **v11.36**:
+- Bulk tournament Auto XI was changed to carry the same bowling intent as the lineup editor.
+- Where the underlying squad allowed, the automatic XI aimed for **seven batting-capable options**, rather than blindly fielding too many pure bowlers.
+- Knockout, World Cup, Swiss and IPL bulk paths were fixed so **all actual matches**, including playoff games, fed player statistics exactly once.
+- Bowling-intent and deployment events could be retained for audit.
+- Seeded explicit-lineup tests protected 40 T20, 40 ODI and 12 Test results against unintended engine changes.
+
+The project began treating **MatchCaptain** as a neutral, deterministic actor making cricket decisions within the user's permissions. A proposed subjective captain-charisma rating was rejected. Strong bowlers should be deployed intelligently, but the manager's explicit Shall/Can choice still governs what is legal.
+
+This is an important moment in the game's evolution: it stopped being enough that a XI was mathematically valid. **The captain had to use the right people, at the right phase, for the right reasons.**
+
+### v11.37 solved the "same person, different cricket" problem
+
+Early squads contained player objects. That approach makes it easy to accidentally create one MS Dhoni for India T20, another for India ODI and yet another for Chennai, then merge or separate their career records incorrectly.
+
+**v11.37** formalised three separate concepts:
+
+1. **Player Identity:** A persistent real or fictional person, ideally tied to a stable Cricsheet person ID.
+2. **Performance Profile:** How that person played in a format and period—batting and bowling skill, style, empirical fingerprints and era ranges.
+3. **Squad Membership:** A reference placing that identity and chosen profile in one team and one squad.
+
+The new **Players** page let commissioners browse, create and edit identities, manage multiple profiles, switch which profile a squad used, and separate accidental same-name collisions. The existing match engine still received a normal materialised player at match time, so this was an **architecture upgrade rather than a simulation rewrite**.
+
+The initial legacy migration test created **198 canonical identities and 265 profiles** from **265 memberships** in the default data with no missing links. A controlled multi-team Dhoni example established that editing one shared T20 profile could update connected memberships without altering an independent ODI profile.
+
+That architecture eventually supported the much larger compressed World Pool. But the existence of a profile from Cricsheet doesn't by itself prove that its batting hand, bowling arm or team contract is fully verified. That problem became a major project in mid-October.
+
+### Domestic cricket was too complicated for a generic IPL generator
+
+The **Phase 2T Domestic** work researched **30 competition templates, 87 stages and 690 fixture definitions**. The issue was not merely adding league names to a dropdown. Real domestic competitions can have:
+- Parallel divisions with separate tables.
+- Elite/Plate or group stages with different qualification paths.
+- Championship or promotion groups.
+- Invited teams and academy fixtures that should not be treated as ordinary title-deciding games.
+- Different match formats, scoring conditions, and playoff routes.
+- Seasons with fixed fixture counts and special cases, such as the West Indies Championship warm-up/final arrangement.
+
+A bug in LOI team selection caused a crash and was fixed; other structural corrections ensured the West Indies warm-up didn't distort champion and statistics accounting. One recurring demand was to **test the actual tournament graph**, not merely verify the JSON template parsed.
+
+**Phase 2U** went back to player and pitch realism after the domestic structures existed. Seven controlled surfaces were compared in **160 T20, 120 ODI and 40 Test innings per surface**—**2,240 first innings** in one full matrix. It also completed season checks including the Metro Bank One-Day Cup (77 games), Sri Lankan three-day FC (63) and multiple BPL seasons.
+
+The BPL exposed a deeper problem. A player who appeared in only six real matches could be present in a fixed simulator squad for twelve or more, collecting an implausible total despite reasonable per-match skills. **We declined to nerf all good batsmen**. The proper long-term solution involves **competition-specific availability/appearance data**, preserving manager authority.
+
+### Tournament "history" needed genuine edition boundaries
+
+The **Phase 3A–3C** work, exemplified by **v11.45 on 8 October**, moved CricSim beyond “finish season, reset everything.” A **tournament family** could own multiple editions without merging their results, entrants and rules into one mutable season.
+
+A new edition could take only selected returning teams from the previous edition, reactivate an archived team, introduce a fresh club, and change a **five-team** league into a **fifteen-team** format. An older edition would retain its actual five entrants and scorecards rather than being retroactively rewritten.
+
+Some rule graphs are resizable; many aren't. A single generic league can inherit rules with a new team list. A graph with explicit qualification slots, parallel divisions or fixed named entrants must instead force a fresh structure choice. The commissioner is not supposed to discover months later that half the participants were silently dropped.
+
+This was also why identities, team status, archived squad snapshots and the backup schema had to mature together. A persistent *world* isn't just a collection of scores—it is a history with boundaries.
+
+### Commentary began to remember the right past
+
+The **v11.59–v11.63** direction introduced limited tournament-aware storytelling. It can refer to **earlier games in the same edition**, then selectively to relevant prior editions: former champions, title defences, rivalry results and genuine player/team records. But unrelated tournaments and Quick Matches are not evidence for an IPL commentary line. Neither is a future fixture whose result hasn't occurred.
+
+This requirement produced an enduring design rule: **freeze factual pre-match context and only narrate what the match knows at that point**. The same principle governed in-innings spoiler avoidance and later mathematical qualification summaries.
+
+### What this phase accomplished
+
+By the start of October, features that once appeared separate—rain, bowling order, player data, domestic competitions, tournament editions, commentary—were revealed to be **one connected state system**. A complete match required the correct squad membership, legal playing XI, conditions, captain decisions, ledger, scorecard, standings and archive. The more CricSim resembled real cricket, the more important its internal consistency became.
+
+
 ## Evidence and dating notes
 
 The main October/November dates are grounded in dated **v11.63–v11.98 validation reports**, **v12 RC/P8–P12 development records**, and the **89 current branch-tip / 68 PR** inventory of the private HFCricSim repository. The early June foundation is recorded in historical conversations and an engineering dossier; the July/August dates come from archival source-file inventory. The September-to-November testing history is separately documented in **[Validation History](./VALIDATION_HISTORY.md)**.
