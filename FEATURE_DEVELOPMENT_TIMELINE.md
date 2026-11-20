@@ -823,6 +823,147 @@ CricSim had acquired far more than new scoring tricks. It now had a real choice 
 The owner chose the second approach, without abandoning calibration or data integrity. That is why **Alpha** is a meaningful word here rather than an apologetic marketing label.
 
 
+
+## Diary 10 — 18–20 November: from months of private work to a public playtest
+
+The public release didn't arrive as a sudden version bump. It was the result of deciding what a stranger needed on their first day with the simulator: a working game, an understandable README, a believable first match, a way to run a league, a way to save that league, and a way to report what's wrong.
+
+### Alpha 1.1 — the first playable injury integration
+
+The early **P12E injury-stabilised** candidate supplied a full standalone HTML with the match-day medical controls wired into **Quick Match**. This included manual/scripted retirement and injury scenarios, low-frequency automatic events, ICC/MCC/BCCI conditions, eligible return, safe fielder replacement and rules for injured bowlers.
+
+The first branch with P12E was superseded because it did **not** have the final Test/FC care-carryover integration. The later Alpha 1.1 package consolidated those corrections. It was not yet a complete claim that all tournament modes inherited injuries.
+
+One of the hardest lessons of this release period was **feature reachability**. A controller can pass twenty or thirty tests and still not matter to a person who only plays tournaments, because the tournament scheduler never calls it. A feature is integrated only when the real user pathways deliver it.
+
+### Alpha 1.2 — make a league attractive enough to publish
+
+The publisher became a much larger request than “export result as text.” The user wanted every part of a league thread to share a coherent design: **match reports, squad lists, statistics, tables, fixtures and tournament summaries**.
+
+For squads specifically, the design drew on actual PlanetCricket league posts: group **openers, top order, middle order, finishers, pacers and spinners** in readable, recognizable blocks rather than dumping a plain comma-separated list. The export should retain useful team/player information and add relevant **team stats beneath the squad** rather than overwhelming readers with decorative markup.
+
+The owner then asked for an accessible customization step: either **pick a colour from a dropdown or enter a HEX code**, then use that palette consistently when posting or exporting. The same simple choice should apply across the available forum output formats. This was less about making a screenshot pretty and more about giving different forum commissioners a consistent **club/league identity**.
+
+The more polished HTML-like forum presentation relied on **custom PlanetCricket BBCode** that a site administrator had to install. The site had changed its XenForo table handling, and a community fix to replace old collapsing TABLE tags was discussed. Neither custom tags nor a forum-side styling rule could be guaranteed working before an administrator actually deployed them. Therefore the **ordinary BBCode fallback** was essential from day one.
+
+A separate **admin installation ZIP** existed because forum administrators need definitions/LESS/examples; ordinary playtesters do **not** need those files. Later release packaging accidentally mixed the two, and this was corrected before the public user-facing distribution was finalized.
+
+### Alpha 1.3 — tournament injuries and the actual IPL stress
+
+The user rejected the idea that player care should exist only in Quick Match: **it belongs in all normal playing modes**. Alpha 1.3 integrated the care settings through standard tournament and match pathways for **T20, ODI, T10, The Hundred, Test and FC**, with control in creation/fixture settings as appropriate. Existing teams with only eleven players still suppress spontaneous bowling injuries, without disabling batting injury.
+
+The acceptance included actual match runs and an important eleven-player edge-case regression: the initial test itself had overlooked that only one side's squad was set to eleven. Correcting the test exposed why **test setup is part of correctness**.
+
+An actual game-engine run then completed **25 IPL seasons, 1,850 matches including 100 playoffs**. It recorded a small number of retire-hurt and injured-bowler events and checked whether results, scorecards and player stats survived. The 25-season output also highlighted why the project was ready for external examination but not perfect: some **12/20 batters** had extremely productive seasons, and **9–10/20 part-time bowlers** received unusually heavy workloads.
+
+The user did not want artificial “balance” achieved by nerfing them without diagnosis. The next step was to see whether the issue was the **base skill**, match opportunity, captaincy phase logic, playing XI or unusual but valid variance.
+
+**Honest boundary:** the specialty **Hong Kong Sixes and Beach Cricket** engines use their own six-player laws and did **not** receive the same full P12E injury integration in Alpha 1.3. Saying “all modes” without that caveat would be inaccurate.
+
+### Alpha 1.4 — portability finally means the saved game as well as the HTML
+
+The user's final pre-release feature request addressed one of the oldest architectural weaknesses, already visible in the June localStorage database:
+
+> If someone restarts, changes a browser profile or moves to another PC, where is the point they can recover the **whole universe**, including the matches?
+
+The **Portable Save Folder** was built as an **opt-in** layer rather than replacing the established IndexedDB/browser save path. The user chooses a directory, and the game can write a complete, verified universe snapshot, retaining up to **twelve rolling recovery snapshots**. The save is written, checked and only then announced as the latest verified snapshot. Restoring from a directory creates a safety backup before overwriting the current browser universe.
+
+The intended migration flow is deliberately simple:
+1. Save and verify.
+2. Copy the **entire folder**, not just an HTML file.
+3. Open the game on another PC, choose that folder and restore.
+4. Keep the original machine and JSON backup until the restored universe has been checked.
+
+A focused test suite covered checksum tampering, snapshot retention, external edits from a second simulated PC, simulated browser-profile migration, and a **five-fixture IPL integration snapshot** that retained five results and **120 player-stat records**. The actual Windows folder-picker permission, physical PC-to-PC move and cold browser restart remain field tests. Chrome/Edge File System Access permissions may need renewed consent. A **Universe JSON export/import** is retained as the fallback.
+
+This wasn't a glamour feature, but it completed an important principle: **a cricket world is worth preserving**. A 200-match league isn't disposable just because someone updated Chrome, moved a file or bought a new PC.
+
+### The PlanetCricket upload failure changed the distribution plan
+
+The first public announcement had an appropriately modest tone: after working since May, the owner was finally comfortable sharing the game and ready to be challenged about its shortcomings. The aim was not to declare the simulator finished. It was to get genuine users producing seasons, reports and odd results we hadn't foreseen.
+
+Then PlanetCricket refused the approximately **5 MB ZIP**, with a server processing error. It wasn't simply a missing HTML extension or a universally verified 5 MB site limit. A public download needed to live somewhere more reliable than one forum attachment-processing path.
+
+The solution was a separate public GitHub **CricSim-Releases** repository, leaving **HFCricSim** development history private. The player ZIP was uploaded as a real **GitHub Release asset**, with a checksum, README, instructions and known limitations. An accidentally included PlanetCricket admin installer was removed from the public upload plan.
+
+The release page itself was initially too thin: it told readers about calibration and a ZIP without showing what the game actually did. We inspected the integrated HTML, wrote about its **actual player profiles, custom tournaments, commentary, scorecards, records, DRS, rules and portable backups**, and changed the release title and designation to a proper **Alpha 1.4 pre-release**.
+
+The first public downloadable PC release is therefore an **offline HTML game intended for PC browsers**, not a pre-certified native Windows installer. No user account or live online server is needed to play ordinary cricket.
+
+### Why it was finally worth sharing
+
+By 20 November, another month of features could have been added. But feature scope had reached a useful stopping point. The bottleneck was no longer "can we add a tournament?" It was **whether actual people find the simulator credible, approachable, reliable and interesting over many matches**.
+
+Public playtesters can now challenge:
+- Does the batting/bowling distribution feel credible across formats and eras?
+- Is a player under- or over-rated, or simply appearing in too many fixtures?
+- Does MatchCaptain use the best bowling resources fairly?
+- Can I create the tournament I actually want?
+- Do the standings, division statistics, play-offs and scorecards agree?
+- Does the result stay hidden until the viewer chooses to see it?
+- Can I publish a readable forum league using ordinary BBCode?
+- Can I close, reopen, back up and move a long-running universe without losing it?
+
+That is the significance of **Alpha 1.4**. It is not the claim that the simulator has no more shortcomings. It is the first point where the whole experience felt useful enough to let other cricket fans expose them.
+
+## Diary 11 — What the journey changed in our development practice
+
+Some of CricSim's most important developments were **rules for making decisions**, not buttons inside the game.
+
+### From broad requests to source-grounded changes
+
+“Make it realistic” became a demand for **named real-data cohorts, separate formats, distributions and correctly matched player opportunities**. “Improve commentary” became **delivery ledger authority, no extra scoring RNG and no spoilers**. “Build a tournament editor” became **real team IDs, explicit qualification edges, fail-closed invalid graphs and editability without overwriting past editions**.
+
+These translations were hard work. Many suggestions would have been quick to demonstrate but dangerous to ship. A single global run-scoring multiplier, automatic role assignment or permissive migration might look successful in a smoke test while breaking the long-running universe.
+
+### From demos to acceptance gates
+
+One isolated Python/Node unit test is not a complete game. Neither is one successful Chromium screenshot. A feature with a realistic-looking scorecard might have zero accurate player identities. A correct tournament graph might still be too difficult to create. A ZIP might pass CRC checks while its UI fails in a real browser.
+
+The project gradually required **separate evidence** for:
+- Source correctness and repeatable full-HTML assembly.
+- Exact RNG/outcome parity for presentation-only changes.
+- Actual simulated matches and ball-ledger invariants.
+- Full tournament editions and stage transitions.
+- Statistical comparisons with suitably matched real cricket.
+- UI navigation and complete export/report presentation.
+- Browser storage and true transaction commit/readback.
+- Native process restart or actual copied-folder restoration.
+- Public forum rendering under the administrator's installed configuration.
+
+Different reports passed different categories, and the difficult failures were retained: timeouts, wrong fixture parity, unproven historical bowling actions, incomplete squad availability and save-transfer limits.
+
+### From adding everything to choosing boundaries
+
+We repeatedly decided **not** to add a mechanic merely because it sounded impressive:
+- No compulsory player ageing or forced career progression.
+- No unlimited rerolling of completed matches.
+- No subjectively rated captain magic.
+- No fabricated bowling arms or false 2026/27 squads.
+- No invented all-format NRR, future scores or qualification chances.
+- No claim to proprietary Professional DLS.
+- No claim that generated commentary has full physical shot tracking.
+- No fictitious twelfth player for a squad of eleven.
+- No breaking the match engine to obtain a prettier report.
+- No claiming an experimental Windows EXE was fully migrated because a unit test passed.
+
+These constraints are part of what makes CricSim recognizable. It gives a commissioner tools and autonomy, while the engine enforces cricket laws and recorded facts.
+
+### Source version versus player release
+
+Much of the private repository contains **experiments, research queues, generated source patches, transport/packaging branches and partial acceptance**. An experiment might be *real and valuable* while still being unsafe to merge.
+
+The public game is a narrower claim: **the assembled offline Alpha 1.4 HTML with its documented capabilities and caveats**. The relationship between old version labels, branch dates and integrated features must always be explained rather than assumed. That is why this history is accompanied by a version-by-version [validation archive](./VALIDATION_HISTORY.md).
+
+### What is still unfinished—and what is not urgent
+
+**Open field acceptance** includes a genuine long-world close/reopen and PC-to-PC folder restore, more browsers and storage quotas, live PlanetCricket administration of custom BBCode, specialty-format injury integration, and a careful review of part-time-bowling/season-leader outliers.
+
+**Not an immediate priority** is rebuilding the entire ball engine, forcing an automatic career economy or adding an unverified physics system simply to grow the feature list. The first public alpha should tell us which remaining problems are important to actual players.
+
+**The development story is therefore a shift in what “done” means:** we began with an inherited working simulator and ambitions for more realistic cricket. We built detailed game systems, had to learn why they conflicted, designed safer data/competition models, stress-tested them, and eventually chose an honest public alpha over endless private feature accumulation.
+
+
 ## Evidence and dating notes
 
 The main October/November dates are grounded in dated **v11.63–v11.98 validation reports**, **v12 RC/P8–P12 development records**, and the **89 current branch-tip / 68 PR** inventory of the private HFCricSim repository. The early June foundation is recorded in historical conversations and an engineering dossier; the July/August dates come from archival source-file inventory. The September-to-November testing history is separately documented in **[Validation History](./VALIDATION_HISTORY.md)**.
