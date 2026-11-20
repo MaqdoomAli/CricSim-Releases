@@ -88,11 +88,24 @@ Users can copy that folder to another computer, select it in CricSim and restore
 4. Try Quick Match, create an IPL tournament or explore the built-in World Pool. Normal gameplay works **offline**—there's no installer, account or live server.
 5. Read **START_HERE_PLAYTESTERS.md** inside the ZIP before attempting save transfers or restoring old universes.
 
-## How far along is the simulation?
+## Testing, calibration and why this is ready for public playtesting
 
-A 25-season IPL stress test completed **1,850 matches**, including playoffs, on the recent Alpha gameplay engine with unchanged ratings and **no simulation exceptions**. That's encouraging, but it isn't proof of perfect calibration.
+The **25-season IPL test is only the most recent run**, not the whole testing history. CricSim has been repeatedly exercised across different formats, versions and parts of the game:
 
-The test also raised legitimate questions: some **12/20-rated batters** had outstanding 500–650-run seasons, and some lower-rated part-time bowlers got workloads worth examining. I don't want to automatically nerf anyone because of one odd result. I'd rather see many people's independent tests, compare seasons and find out whether the ratings or the engine need adjusting.
+| Documented run | Workload | What it actually tested |
+| --- | --- | --- |
+| **v11.66 six-format ball-engine stress** | **998 matches, 54 editions, 2,081 innings and 313,975 legal deliveries** | Real ball-by-ball T20, T10, Hundred, ODI, Test and first-class scorecards, bowling figures, extras, records and tournament-stat reconciliation; no mismatches in the audited invariants |
+| **v12 ten-team IPL stress** | **740 full matches across 10 editions**, then **148 in two corrected-candidate editions** | Real IPL-style league and playoff progression; exposed and fixed a home/away fixture imbalance; 100 independent fixture-seed fairness checks passed |
+| **Alpha 1.3 final IPL stress** | **25 full seasons / 1,850 matches**, including 100 playoffs | Zero simulation exceptions in that run; rating outliers, bowler usage and limited injury behaviour inspected |
+| **Long-term domestic competition stress** | **30 County Championship editions / 3,780 controlled fixtures** | Promotion/relegation, season identity, stage progression and archive continuity—not 3,780 real ball-by-ball matches |
+| **Cricsheet ODI A/B calibration** | **660 schedule-matched simulations** against a **66-match real ODI cohort** | First-innings mean improved from 238.27 to 248.57 versus 251.92 observed; chase outcomes and all-out frequency also moved closer to observed cricket |
+| **Specialty formats and save integrity** | **750 six-player exhibition matches** in an earlier specialty-format audit; **308 matches / 31 editions** in a backup test | Separate rule/ledger regressions and lossless in-memory save fidelity, **not** a complete cross-PC restore certification |
+
+There have also been focused runs for Test weather, declarations and captaincy, DRS, rain interruptions, over limits, qualification routes, match-versus-tournament parity, statistics and save failure handling. **Some tests caught genuine bugs and limits**: fixture fairness, a roughly 504 MB full-universe export timeout, and incomplete browser cold-restart coverage.
+
+I have published a [**detailed, version-by-version validation history**](https://github.com/MaqdoomAli/CricSim-Releases/blob/main/VALIDATION_HISTORY.md) with exact scopes and caveats. **These are historical tests from different builds, not a claim that every suite was rerun on this exact Alpha 1.4 download or that the counts should be added together as unique matches.**
+
+The latest IPL run also raised legitimate questions: some **12/20-rated batters** had outstanding 500–650-run seasons and a few **9–10/20-rated part-time bowlers** received substantial workloads. I don't want to arbitrarily nerf them after an odd season. That's exactly the kind of behaviour I want independent playtesters to examine.
 
 **What I'd love you to try:** Run complete seasons, challenge the ratings, test weak and strong teams, look at bowling changes and chase behaviour, inspect match commentary, finish multi-stage tournaments, and **try saving, closing and reopening the game**. When something is wrong, give the browser, build number, format, player ratings, fixture and scorecard—or a copy of the steps to reproduce it. Please keep your personal save files private unless you're comfortable sharing them.
 
@@ -103,6 +116,6 @@ The test also raised legitimate questions: some **12/20-rated batters** had outs
 
 ---
 
-[Release notes](./RELEASE_NOTES.md) · [Known issues](./KNOWN_ISSUES.md) · [IPL test results](./IPL25_STRESS_REPORT.md) · [Report a bug](./REPORT_BUG.md)
+[Release notes](./RELEASE_NOTES.md) · [Known issues](./KNOWN_ISSUES.md) · [Validation history](./VALIDATION_HISTORY.md) · [Latest IPL test](./IPL25_STRESS_REPORT.md) · [Report a bug](./REPORT_BUG.md)
 
 **The private developer repository and the PlanetCricket administrator-installation materials are not part of this public release.**
