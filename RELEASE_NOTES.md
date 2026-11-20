@@ -18,6 +18,11 @@
 
 The **25-season / 1,850-match IPL run** was the **latest** stress test, not the project's only one. Earlier documented audits include:
 
+- **V16:** 100 full IPL seasons — **7,400 matches / 14,800 innings**, with calibration against IPL Cricsheet. The run exposed excess all-outs and too few 200+ scores.
+- **V18:** 90 IPL seasons — **6,660 matches** measuring Orange/Purple Cap leaders, century rates and freak individual innings.
+- **V19:** **1,200 seeded ODIs** to measure scoring phases, century rates and wicket hauls.
+- **v11.93/v11.95:** 4,554 first-innings observations across 23 years/three formats, 138 complete-match smoke tests; later 978 paired innings per version and 69 full matches.
+- **P10.7:** 408 source-backed 2026 Hundred real-XI matches per engine as a held-out candidate comparison.
 - **v11.66:** 998 genuine ball-by-ball matches across T20, T10, Hundred, ODI, Test and FC (54 tournament editions, 313,975 legal balls), with no reported mismatches in the audited score/stat invariants.
 - **v12 RC2:** 740 real IPL-style matches over ten seasons plus 148 corrected-build matches over two further seasons, alongside 100 seeded fixture-fairness checks and 108 identical T20/ODI/Test inning comparisons.
 - **v11.66 structural longevity:** 30 County Championship years and 3,780 **controlled results** testing progression and archived season identity—not full cricket simulations.
@@ -26,7 +31,7 @@ The **25-season / 1,850-match IPL run** was the **latest** stress test, not the 
 
 **These tests span different versions and test types, so do not treat the figures as one cumulative match count or as certification of the exact Alpha 1.4 build.** Calibrating realism is ongoing, especially 12/20-rated batting outliers and 9–10/20-rated bowling workloads.
 
-[**Read the full version-by-version stress-test and calibration history**](./VALIDATION_HISTORY.md).
+[**Read the expanded September–November stress-test and calibration history**](./VALIDATION_HISTORY.md), including repeated-run cautions and unsuccessful tests.
 
 ## Alpha limitations
 
