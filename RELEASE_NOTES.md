@@ -2,7 +2,7 @@
 
 **Platform:** Offline HTML game for desktop Chrome/Edge · **Status:** Alpha playtest.
 
-**How we got here:** [Read the May–November feature-development timeline](./FEATURE_DEVELOPMENT_TIMELINE.md), including the rejected ideas and experiments that informed this Alpha.
+**How we got here:** [Read the full May–November development history](./FEATURE_DEVELOPMENT_TIMELINE.md)—the original June v11.6 build, eleven detailed development diaries, dated milestones, failed experiments and decisions leading to this Alpha.
 
 ## Core systems
 
