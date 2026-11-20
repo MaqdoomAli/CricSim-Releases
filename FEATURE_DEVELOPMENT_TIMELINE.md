@@ -964,6 +964,103 @@ The public game is a narrower claim: **the assembled offline Alpha 1.4 HTML with
 **The development story is therefore a shift in what “done” means:** we began with an inherited working simulator and ambitions for more realistic cricket. We built detailed game systems, had to learn why they conflicted, designed safer data/competition models, stress-tested them, and eventually chose an honest public alpha over endless private feature accumulation.
 
 
+
+## Appendix A — The release and feature lineage at a glance
+
+This register is deliberately **not a table of 89 separate product releases**. Many current GitHub branches are drafts, source patches, research archives, duplicated source tips or delivery-only branches. The register follows the *feature lineage*: what the milestone meant, and whether it was part of a stable release, an experimental branch or a later integrated alpha. Dates marked **c.** are approximate and based on archive/report dating.
+
+| Approximate period | Milestone | Feature change or key decision | Historical maturity |
+| --- | --- | --- | --- |
+| May 2026 | Project begins | Work on improving an existing cricket simulator; earliest prototype not recovered | Owner-reported origin |
+| **1 Jun** | **v11.6 IPL2026 v3** | Offline playable interface, Quick Match, six main format/custom settings, teams/squads, archetypes, history/stats, league/IPL/knockout/World Cup/Swiss | Source artifact inspected; earliest direct feature baseline |
+| **1–2 Jun** | User scope decisions | Manual player/skill editing; no forced ageing/progression/retirement; separate tournament vs career stats | Explicit owner requirements |
+| 19 Jul | World Cricket Research v0.1 | ICC/India governance and domestic competition mapping | Research, not playable catalogue |
+| 19 Jul | Modular source ZIP | Separate editable-source direction while retaining portable HTML | Archived source package |
+| 26 Aug | Patched modular source | Revised development/source archive; specific patch details not proven | Archival evidence only |
+| Sep | V16 | Better dot/single/boundary distribution, 100 IPL seasons | Calibrated historical candidate; residual errors |
+| Sep | V17/V18 | Batting and bowling leader-tail tuning, 90-season IPL study | Calibrated candidate, not a permanent guarantee |
+| Sep | V19 | ODI scoring phases, hundreds and wicket hauls, 1,200 ODIs | Research and engine candidate |
+| Sep | V20/V21 | ODI team pack, player roles, middle-order survival, lower-order scoring, death bowling, CSV fidelity | Calibrated candidate |
+| Sep | V22 | ODI 300/350+ tail and 150+ individual scores, 30 tournaments | Historically “locked” ODI pass with known residuals |
+| **29 Sep** | v11.13 | Test venue/home-ground pools, verified surface and regional weather identities | Separate venue development |
+| Late Sep | v11.17–v11.22 | ODI phase texture, Test second-new-ball/venue context, rain/D/L and protected same-seed regressions | Format-specific iterations |
+| Early Oct | v11.24–v11.27 | PlanetCricket match posting, BBCode and styled report development | Forum presentation evolution |
+| **2 Oct** | v11.28 | Optional automatic rain, multiple interruptions and full Super Over delivery records | Tested engine extension |
+| Early Oct | v11.34–v11.36 | Phase-aware bowling, Shall/Can Bowl, Auto XI parity and playoff stat fixes | Integrated cricket/tournament corrections |
+| **2 Oct** | v11.37 | Canonical Player Identity, Performance Profile and Squad Membership | Major data model milestone |
+| c. 7–8 Oct | Phase 2T/2U | Domestic graph registry; profile and pitch calibration; complete example seasons | Developed with explicit unresolved BPL availability |
+| **8 Oct** | v11.45 Phase 3C | Persistent multi-edition tournament families and safe team-count restructuring | Model/validation milestone |
+| c. 8–9 Oct | v11.59–v11.62 | Bounded tournament-memory commentary and pre-match historical context | Iterative narrative design |
+| **9 Oct** | v11.63 | Test/FC session and day exports from saved delivery ledger | Browser-tested standalone |
+| **9 Oct** | v11.64 | Exceptional one-use commissioner correction; editable domestic templates; shared venue surfaces | Browser-tested incremental release |
+| **9 Oct** | v11.65 | Deterministic richer broadcast commentary, score/phase/session pressure | Browser-tested presentation update |
+| **9 Oct** | **v11.66** | Tournament graph fail-closed integrity, division statistics and 30-edition structural stress | **Documented historical stable fallback** |
+| **9 Oct** | v11.67–v11.68 | Compressed multipart backups, IndexedDB staged restore, browser process durability | Experimental storage beta; not Alpha 1.4 certification |
+| **9 Oct** | v11.69–v11.71 | Pure record/preflight checks, batting-order corrections, Hundred/T10 workloads, keeper/rain laws | Development candidates with focused tests |
+| **9 Oct** | v11.72–v11.73 | Hong Kong Sixes/Beach Cricket historical rules and dedicated scorers/illustrative geometry | Experimental special-format engines |
+| **9 Oct** | v11.74–v11.75 | Mixed-format bilateral series, then multi-team groups/fixtures and rules | Experimental commissioner feature integration |
+| **9–10 Oct** | v11.76–v11.78 | Custom qualification contracts, byes planner and guided Visual Architect | Structural and UI candidates |
+| **10 Oct** | v11.79–v11.80 | Searchable/paged teams, categorized World Pool browsing, first real-HTML themes | Development and browser UI candidates |
+| **11 Oct** | v11.81–v11.82 | Studio/Broadcast/Pavilion and spoiler-safe UI styling | Alternative presentation candidates |
+| **11 Oct** | v11.83–v11.90 | Unknown metadata, source-verified player hands, bowling families, keeper roles, aliases | Evidence-bound corrections; 400-player gate failed |
+| **12–13 Oct** | B001 | 100-player two-source evidence batch, 90 bowling actions corroborated | Research dossier; ten bowling roles still unresolved |
+| **14–15 Oct** | v11.91–v11.95 | Historical year affects scoring; commissioner fantasy rules separate; ODI/T20 era re-fit | Experimental, with blocked candidate(s) |
+| **15 Oct** | v11.96–v11.98 | Red-ball historical survival, balanced captain default, forecast-aware declaration experiments | Full-match paired studies; not unconditional stable promotion |
+| **15 Oct** | v12 RC1/RC2 | Merge full JS/CSS source, mixed-format year/rules, linked multi-edition fixtures | Integrated development candidates |
+| **15–18 Oct** | v12 RC3 | Fair 4–20-team fixtures, cached old-edition commentary, save preflight | Development candidate |
+| **15–18 Oct** | v12 RC4 | Forum-first BBCode, Current Squads/Atlas, squad and fixture centre fixes | Broad browser/source development, several unmerged branches |
+| **18–24 Oct** | RC6/RC7/RC7.1 | Transaction safety, backup and failed-save protections | Browser/save-specific release candidates |
+| **22–24 Oct** | RC8/RC8.8 | DRS, Match Centre, completion fixes and Sim All checkpoints | Playtest HTML, not certified stable |
+| **23 Oct onward** | RC9 Desktop | Native Go/SQLite shell for existing HTML; Windows EXE trial | Separate native development track |
+| **25–30 Oct** | P5–P8 | Pages/statistics audit, richer delivery commentary, reduced repetition, contextual presentation | Iterative page/editorial work |
+| **30 Oct–2 Nov** | P9.3 | Qualification Analyst with exhaustive supported points outcomes | Tested and user-accepted |
+| **3–13 Nov** | P9.4 | Decision Centre: fixtures that matter, team-specific conditional routes | Bounded development/alpha feature family |
+| **3–13 Nov** | P10 | Rating/import path, real national XI cohorts, Cricsheet era and Hundred evidence | Extensive research and engine testing; some candidate gates open |
+| **Late Oct–13 Nov** | RC9.1 | Full-universe JSON → SQLite guided import, rollback/readback and accidental-reset guards | Native pilot; genuine user migration gate open |
+| **13 Nov** | P11 | Full-game release matrix, browser and restore acceptance methodology | Explicit pending real-environment gates |
+| **13–14 Nov** | P12D | Retirement/injury law model and source-controller tests | Early development experiment |
+| **18 Nov** | **Alpha 1.1** | P12E care in Quick Match, Test/FC carryover/return corrections | Full HTML alpha candidate |
+| **19 Nov** | **Alpha 1.2** | Styled PlanetCricket publishers, squad/fixture/table/stat design, HEX/dropdown accents | Full player HTML; forum custom tags still admin-dependent |
+| **20 Nov** | **Alpha 1.3** | P12E through standard tournament/full-XI match modes, 25-season IPL test | Full HTML alpha candidate; Sixes/Beach gap |
+| **20 Nov** | **Alpha 1.4** | Opt-in portable save directory, verified rolling snapshots and folder restore | **Public PC-browser alpha** |
+| **20 Nov** | Public release | Separate public download GitHub repo, playtester README, known issues and checksums | **Live public playtest** |
+
+Dates in a row indicate the **documented milestone**, not guaranteed dates when each line of code was first written. GitHub's first PR burst in October imported existing work, so those branch creation dates are not an original authoring chronology.
+
+## Appendix B — How the same feature changed across versions
+
+The version register shows when things changed; this second view shows **why**. A feature can remain recognizable across months while being rebuilt internally.
+
+| System | Original form | What broke or became insufficient | Matured approach | Public-release boundary |
+| --- | --- | --- | --- | --- |
+| Ball engine | v10.1 pitch/bowler outcome tables | Unrealistic dot/rotation mix, 200+ tails, all-outs, weak partial skills | V16–V22 and v11.x calibrated ball/phase models and guarded formats | Calibrated but not perfect; outliers remain |
+| Player selection | Ordinary named player objects and squads | Same-name duplication, format identity leakage, historical roster confusion | Canonical identities + era/format profiles + squad memberships + source provenance | Big catalogue; accuracy/completeness varies |
+| Bowling captain | Automatic phase preference | Specialist overs wasted; Quick/Tournament XIs diverged; keeper could be assigned impossible roles | Shall/Can, XI parity, legal workloads, neutral match-state captain | Weak part-time usage still a watch item |
+| Domestic league | Standard league/knockout templates | Real stage graphs, divisions and promotion could not be expressed; stats scopes wrong | 30-template domestic registry, custom stages, fail-closed graph, family editions | Broad support with bespoke graph/old saves caveats |
+| Tournament editing | Technical graph/CSV IDs | Easy to omit entrants, impossible round definitions, confusing creator | Guided Visual Architect and preflight; current team finder | Not every experimental builder branch fully merged |
+| Match reporting | Finished summary and conventional scorecard | Spoilers, vague commentary, no partial Test records | Full chronological ledger-derived narration, session/day views, Match Centre | Wording still limited by what engine knows physically |
+| Forum exporting | Basic BBCode/plain match posts | Hard to post a stylish entire league; site-specific tags unavailable | Standard BBCode fallback + optional styled PlanetCricket match/squad/table/fixture/stat posts | Custom style awaits external admin |
+| Saved universe | localStorage with last 100 matches retained | Historical records too large, browser-profile dependence, failures risk silent loss | IndexedDB, compressed/JSON backups, staging/readback, portable folder snapshots | Real cross-PC cold-restart test still open |
+| Historical simulation | Player-era labels but often modern match environment | Older T20s scored like modern fixtures; Test sessions/draws off | Year-aware outcome patterns, rule/year separation, 3–5-day red-ball decisions | Source-matched calibration remains incomplete |
+| DRS | No integrated review path; source evidence prototype | Must rule during the ball, track review budgets and scorecards | Configurable DRS in later RC match/scorecard/commentary flows | Not a professional ball-tracking physics system |
+| Qualification | Table positions only | No explanation of mathematical routes or important fixtures | P9.3 points analyst → P9.4 Decision Centre | Conservative on NRR and unsupported stages |
+| Injuries | No match-day retire-hurt/out coverage | What if the team has eleven players; who fields/bowls; can batter return? | P12 rules controller → Quick Match → standard tournaments | Specialty six-player games incomplete |
+| Windows | One local HTML file | Users want PC durability and portable history | Separate Go/SQLite pilot plus Alpha 1.4 browser folder export | Public release is HTML, not native EXE |
+
+## Appendix C — Audit and historical gaps
+
+This timeline draws from the dated June archived v11.6 HTML, recorded early conversations, July/August archive inventories, September calibration reports, October validation documents and **all 89 current branch tips / 68 available PR records** examined in the accompanying validation audit. Branch-tip inventory is not a forensic reconstruction of every deleted intermediate commit.
+
+The surviving evidence is **much richer after September**. Do not infer missing exact May dates, intermediate summer versions or author attribution just because the narrative is chronological. Never confuse a proposal, prototype, scripted logic test, full cricket match, synthetic controlled fixture and actually distributed playable build.
+
+**Three questions remain distinct:**
+1. **Was the feature designed or requested?**
+2. **Was it implemented and tested in a particular development candidate?**
+3. **Is it present, reachable and reliable in the exact public Alpha 1.4 game?**
+
+The third is the highest bar. This history records work in all three categories, but it does not claim a failed or partial development branch was magically completed simply because the project later shipped an alpha.
+
+
 ## Evidence and dating notes
 
 The main October/November dates are grounded in dated **v11.63–v11.98 validation reports**, **v12 RC/P8–P12 development records**, and the **89 current branch-tip / 68 PR** inventory of the private HFCricSim repository. The early June foundation is recorded in historical conversations and an engineering dossier; the July/August dates come from archival source-file inventory. The September-to-November testing history is separately documented in **[Validation History](./VALIDATION_HISTORY.md)**.
