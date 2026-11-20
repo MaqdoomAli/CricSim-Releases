@@ -90,10 +90,14 @@ Users can copy that folder to another computer, select it in CricSim and restore
 
 ## Testing, calibration and why this is ready for public playtesting
 
-The **25-season IPL test is only the most recent run**, not the whole testing history. CricSim has been repeatedly exercised across different formats, versions and parts of the game:
+The **25-season IPL test is only the most recent run**, not the whole testing history. Earlier September calibration alone ran **100 IPL seasons (7,400 matches)** and then a distinct **90-season IPL leader audit (6,660 matches)**, followed by a **1,200-match ODI stress test**. CricSim has been repeatedly exercised across different formats, versions and parts of the game:
 
 | Documented run | Workload | What it actually tested |
 | --- | --- | --- |
+| **V16 — 100-season IPL calibration** | **7,400 full matches / 14,800 innings** | Ball-by-ball scoring distributions and player/season realism; identified excess all-outs and too few 200+ totals |
+| **V18 — 90-season IPL leader audit** | **6,660 matches across 90 seasons** | Orange/Purple Cap leaders, hundreds, 50–100 conversions, high-scoring team totals and individual hot streaks |
+| **V19 — ODI stress and Cricsheet comparisons** | **1,200 seeded ODIs** | Phases, centuries and bowling-haul frequencies; same synthetic four-team pool, not every ODI era |
+| **v11.93 — 23-year era benchmark** | **4,554 first innings + 138 full matches** | Controlled T20/ODI/Test scoring comparisons across 2004–2026, not observed historical match replay |
 | **v11.66 six-format ball-engine stress** | **998 matches, 54 editions, 2,081 innings and 313,975 legal deliveries** | Real ball-by-ball T20, T10, Hundred, ODI, Test and first-class scorecards, bowling figures, extras, records and tournament-stat reconciliation; no mismatches in the audited invariants |
 | **v12 ten-team IPL stress** | **740 full matches across 10 editions**, then **148 in two corrected-candidate editions** | Real IPL-style league and playoff progression; exposed and fixed a home/away fixture imbalance; 100 independent fixture-seed fairness checks passed |
 | **Alpha 1.3 final IPL stress** | **25 full seasons / 1,850 matches**, including 100 playoffs | Zero simulation exceptions in that run; rating outliers, bowler usage and limited injury behaviour inspected |
@@ -103,7 +107,7 @@ The **25-season IPL test is only the most recent run**, not the whole testing hi
 
 There have also been focused runs for Test weather, declarations and captaincy, DRS, rain interruptions, over limits, qualification routes, match-versus-tournament parity, statistics and save failure handling. **Some tests caught genuine bugs and limits**: fixture fairness, a roughly 504 MB full-universe export timeout, and incomplete browser cold-restart coverage.
 
-I have published a [**detailed, version-by-version validation history**](https://github.com/MaqdoomAli/CricSim-Releases/blob/main/VALIDATION_HISTORY.md) with exact scopes and caveats. **These are historical tests from different builds, not a claim that every suite was rerun on this exact Alpha 1.4 download or that the counts should be added together as unique matches.**
+I have published a [**detailed, version-by-version validation history**](https://github.com/MaqdoomAli/CricSim-Releases/blob/main/VALIDATION_HISTORY.md) with exact scopes and caveats. **These are historical tests from different builds, not a claim that every suite was rerun on this exact Alpha 1.4 download or that the counts should be added together as unique matches.** The full history also distinguishes 3,780 controlled County results, 23,637 stubbed qualification fixtures, 408-per-engine Hundred matched-XI runs, old-vs-new A/B tests, and Cricsheet real-world source data.
 
 The latest IPL run also raised legitimate questions: some **12/20-rated batters** had outstanding 500–650-run seasons and a few **9–10/20-rated part-time bowlers** received substantial workloads. I don't want to arbitrarily nerf them after an odd season. That's exactly the kind of behaviour I want independent playtesters to examine.
 
