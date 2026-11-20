@@ -1,0 +1,42 @@
+name: Sync public CricSim release text
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - RELEASE_BODY.md
+      - .github/workflows/sync-public-release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cricsim-release-metadata
+  cancel-in-progress: false
+
+jobs:
+  sync-release:
+    name: Update existing release (no tests or builds)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Apply title, body, prerelease flag and remove duplicate attachment
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release edit Simulator \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "CricSim v12 — Alpha 1.4 | First Public PC Playtest" \
+            --notes-file RELEASE_BODY.md \
+            --prerelease
+          asset_id="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/Simulator" --jq '.assets[] | select(.name == "RELEASE_BODY.md") | .id')"
+          if [[ -n "$asset_id" ]]; then
+            gh api --method DELETE "repos/$GITHUB_REPOSITORY/releases/assets/$asset_id"
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/Simulator" \
+            --jq '{name, prerelease, notes_length: (.body | length), assets: [.assets[].name]}'
