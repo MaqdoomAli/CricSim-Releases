@@ -4,6 +4,8 @@
 
 **[⬇ Download CricSim Alpha 1.4 Playtester ZIP](https://github.com/MaqdoomAli/CricSim-Releases/releases/download/Simulator/CricSim_v12_Alpha1_4_Playtester.zip)** · [Release page](https://github.com/MaqdoomAli/CricSim-Releases/releases/tag/Simulator) · [Playtester guide](./README_PLAYTESTERS.md)
 
+**[📖 Development timeline: from May to Alpha 1.4](./FEATURE_DEVELOPMENT_TIMELINE.md)** — the complete feature history, decisions, replacements and experimental work.
+
 **Quick start:** Extract the game ZIP, open **CricSim_v12_ALPHA1_4_Portable_Save_Folder.html** in Chrome/Edge, and play offline. **Make backups.** This is an alpha, not a certified stable release.
 
 
