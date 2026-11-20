@@ -11,6 +11,28 @@
 
 ---
 
+
+## How to read this history
+
+This is deliberately longer than release notes. There are three ways to use it:
+
+- **The overview (Chapters 1–9):** Chronological summary of how CricSim changed from May through the Alpha 1.4 release.
+- **The development diary (Diaries 1–11):** The whole journey in detail—early code, exact bug reports, user decisions, failed fixes, architecture and testing.
+- **The appendices:** A dated version/feature ledger, side-by-side evolution of each major system and source/verification caveats.
+
+**Navigation:** [Overview](#the-journey-in-one-picture) · [Detailed diary](#part-ii--the-longer-development-diary) · [Version/feature ledger](#appendix-a--the-release-and-feature-lineage-at-a-glance) · [System evolution](#appendix-b--how-the-same-feature-changed-across-versions) · [Validation history](./VALIDATION_HISTORY.md)
+
+### What the status language means
+
+| Term | Meaning |
+| --- | --- |
+| **Existing by** | Visible in an inspected old build; not a claim that this project invented it then |
+| **Implemented / tested candidate** | Actual code and specific acceptance evidence exist, but no automatic promotion to public release |
+| **Experimental / draft / research** | A real design, code or evidence effort with incomplete or deliberately blocked integration |
+| **Stable fallback** | Historically identified safe reference (v11.66); not the latest feature-complete build |
+| **Public Alpha 1.4** | Actual player-download HTML containing the documented playable features, with open field acceptance |
+
+
 ## The journey in one picture
 
 | Stage | Period | What CricSim was becoming |
