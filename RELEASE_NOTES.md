@@ -14,9 +14,19 @@
 - **Injuries and retirements:** Opt-in, limited player-care logic for the normal 11-player match modes. Special six-player formats are not fully integrated.
 - **New in Alpha 1.4:** Optional Portable Save Folder, verified rolling full-universe snapshots, restore-from-folder and JSON export/import fallback.
 
-## Calibration and acceptance
+## Stress testing and cricket calibration
 
-A recent 25-season IPL run completed 1,850 simulated matches including playoffs without simulation exceptions. Balancing questions remain about occasional standout 12/20-rated bats and workloads of 9–10/20-rated part-time bowlers. This is not final cricket calibration.
+The **25-season / 1,850-match IPL run** was the **latest** stress test, not the project's only one. Earlier documented audits include:
+
+- **v11.66:** 998 genuine ball-by-ball matches across T20, T10, Hundred, ODI, Test and FC (54 tournament editions, 313,975 legal balls), with no reported mismatches in the audited score/stat invariants.
+- **v12 RC2:** 740 real IPL-style matches over ten seasons plus 148 corrected-build matches over two further seasons, alongside 100 seeded fixture-fairness checks and 108 identical T20/ODI/Test inning comparisons.
+- **v11.66 structural longevity:** 30 County Championship years and 3,780 **controlled results** testing progression and archived season identity—not full cricket simulations.
+- **Cricsheet calibration:** v11.17 used 660 simulated ODI matches against a 66-match real current-rule ODI cohort. Earlier Test session/weather and specialty format suites added further focused simulations.
+- **Save durability:** An in-memory 308-match/31-edition archive fidelity test passed; a roughly 504 MB older full-universe export **timed out**, and actual PC-to-PC restore remains a public playtest target.
+
+**These tests span different versions and test types, so do not treat the figures as one cumulative match count or as certification of the exact Alpha 1.4 build.** Calibrating realism is ongoing, especially 12/20-rated batting outliers and 9–10/20-rated bowling workloads.
+
+[**Read the full version-by-version stress-test and calibration history**](./VALIDATION_HISTORY.md).
 
 ## Alpha limitations
 
