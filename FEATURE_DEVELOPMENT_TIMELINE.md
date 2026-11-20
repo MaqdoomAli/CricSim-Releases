@@ -264,7 +264,7 @@ Its compressed World Pool contains **10,877 player identities, 72,302 performanc
 ---
 
 
-# Part II — The longer development diary
+## Part II — The longer development diary
 
 The nine chapters above provide the **chronological overview**. The following is the detailed account of the problems, experiments, corrections, unshipped ideas and design decisions behind them. Here “we” describes the project’s user-directed and AI-assisted iteration, not a claim that every line of inherited or generated code was personally authored unaided.
 
