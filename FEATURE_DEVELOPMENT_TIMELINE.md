@@ -546,6 +546,135 @@ The owner explicitly required **individual 2–3-source checks**. A broad unknow
 **What October 9–13 established:** a stable fallback, an event-derived reporting model, audited commissioner authority, stronger laws, scalable backups, cross-format competitions, a usable creator, and a conservative approach to cricket identity data. It also proved why development branches, source tests and final gameplay releases must be kept separate.
 
 
+
+## Diary 6 — 14–16 October: historical years, cricket economics and the v12 turning point
+
+The next major discovery was simple to explain and difficult to repair: **having a 2006-rated player does not make a 2006 cricket match behave like 2006**.
+
+### The difference between player era and match era
+
+A 2006 T20 is not a 2026 T20 with the names changed. The frequency of sixes, pacing of the powerplay, wicket preservation, late-innings risk, run rotation, typical scoring platform and applicable playing rules can differ. But a simulation's **year** must not become a magic switch that silently reassigns player ratings, changes the user's fantasy rules or overwrites saved squads.
+
+The experimental **v11.91** era-aware T20 effort tied the selected year to real delivery-level scoring. In synthetic same-XI tests, 2006, 2015 and 2026 scored differently because the ball engine changed **how events arose**, not because somebody multiplied the final runs after the innings.
+
+**v11.92** deliberately separated the **commissioner's fantasy rules** from the historical year. A manager could run a fictional 2006 edition with modern rule allowances chosen explicitly—without the game declaring the concept invalid for being anachronistic.
+
+**v11.93** extended selected-year handling across T20, ODI, Test and FC; **v11.94** attempted a continuous Cricsheet-derived change-point model rather than three hardcoded eras. One early ODI candidate was **blocked** for missing the absolute scoring/rotation target. **v11.95** confined the adjustments and protected modern-format behaviour using matched seeds.
+
+**v11.96–v11.98** returned to the hardest formats: Tests and first-class cricket. Three-day and four-day fixtures require an entirely different draw/declaration/overs calculus from five-day Tests. Some early historical draw corrections were *too* strong, proving how sensitive outcomes are to batting depth and captain behaviour. A subtle Test captain bug defaulted ordinary match states to **defensive** when no tournament pressure objective was explicitly set. The experiment changed that to a **balanced/neutral** default rather than introducing a subjective captain personality.
+
+Later declaration research checked rainfall forecasts and remaining overs, rejected an overbroad prohibition on declaring while behind, and accepted narrower forecast-aware gates. Source-pinned paired experiments compared hundreds of actual red-ball games per engine rather than trusting a single showcase Test.
+
+An important owner principle survived throughout: **match year is chosen by the commissioner, ratings remain independently editable, and MatchCaptain should act through rules and game state rather than private opinions**.
+
+### Source research was catching up with realism
+
+Different cricket eras also meant different actual XI populations. A 2026 team shouldn't automatically be fitted with its 2008 playing XI because the game has a convenient old World Pool snapshot. Likewise, a limited real historical player fingerprint must not be dressed up as a confirmed batting hand or all-rounder role.
+
+The project began requiring **source provenance and a separation between participation and performance**:
+- Identity: Who is this player?
+- Performance profile: How does the player generally perform in this era/format?
+- Squad membership: Does this team have the player?
+- Match selection/availability: Was that player eligible and selected **for this fixture**?
+- Conditions and captaincy: How was that ability actually deployed?
+
+This later explained apparently misleading season-leader realism. A player may not be unrealistically skilled per ball; the simulator may simply have let him play far more matches than the real-world reference player.
+
+### v12 integration: the cost of many parallel branches
+
+By mid-October we had accumulated a stable v11.66 base and numerous experiments in commentary, laws, venues, roster research, mixed formats, source chapters and save tools. That created a new category of defect: **two features may work in isolation but fail when assembled in the same full HTML**.
+
+The v12.0 integration uncovered a duplicate cross-script declaration, resulting in only **50 of 51 executable scripts** loading together. That is not a cricket probability bug. It is a consequence of growing a single-file application through layers of patches and wrappers. The complete executable page had to be assembled, opened and tested as one application.
+
+The source work targeted a portable, editable architecture: **51 JavaScript modules, eleven CSS modules and an HTML shell**, reassembled into one offline HTML. A SHA-pinned parent and source manifest helped ensure an edit to one subsystem wasn't secretly changing cricket elsewhere.
+
+The **RC2 mixed-format integration** closed an especially dangerous gap: the ordinary match and tournament screens understood the selected year, but mixed-format series and custom multi-team paths initially did not. They had to pass a persistent year and optional free-hit/Impact Player rules into the actual engine, with per-fixture overrides and frozen played-match rule snapshots. A fantasy historical Test, T10 or Twenty20 fixture should not change after the competition manager edits an unrelated settings panel.
+
+Three linked six-team IPL-style editions completed **102 real matches** in the RC2 test. The longer ten-team experiment at that stage **timed out** and therefore did not earn a pass. The distinction between “smaller complete test passed” and “bigger stress still blocked” was kept explicit.
+
+## Diary 7 — 15–24 October: making the integrated game useful to ordinary commissioners
+
+The central problem was no longer whether the engine *could* play a complicated tournament. It was whether someone could actually **set it up, follow it, find the right fixtures, understand failures and recover their data**.
+
+### Ten-team IPL fixtures exposed a fairness bug
+
+A ten-team tournament can have the correct number of matches and still give one team an extreme home advantage. One development stress run found fixtures as skewed as **13 home versus 1 away** in an otherwise playable fourteen-game league.
+
+The correction did not rewrite past results. It repaired the fixture generator for new editions and tested **100 different seeded schedules** for opponent coverage, fourteen games per team, seven home/seven away and reverse home grounds when appropriate. The corrected 10-team campaign was run again.
+
+The acceptance sequence eventually completed **740 real IPL-style matches across ten editions**, followed by **148 matches across two corrected-build editions**. All seasons included the proper four playoff games. This demonstrated why checking a fixture count alone would have missed the defect.
+
+Later RC3 work generalized fixture fairness to **4–20 teams**, with different repeat-opponent policies depending on field size. But owner-defined custom competitions retained their explicitly chosen structures. The generator could make a conventional IPL-style schedule sensible without overruling a commissioner's deliberately asymmetric competition.
+
+### The tournament hub had too many places to hide information
+
+A competition could be running correctly while the UI made fixtures difficult to find. Upcoming and Results lists displayed cramped cards, truncated names, too few fixtures or only a small slice of past results. A commissioner had to click around to understand what was going on.
+
+The **Tournament Match Centre** work reorganized fixtures and results into a navigable view with **Upcoming / Results / All**, team and stage filters, consistent score/margin alignment, pagination and links to match reports. The earlier blue/orange Match Centre design was polished further without reducing the actual scorecard content.
+
+A reported tournament-creation regression showed the **simulation year** was in the wrong wizard step and a required value could block creation. Fixing that meant adjusting the actual creation form and regression checks, not only making a more attractive mockup.
+
+The **Sim All** interaction created a related problem. The user said it could feel stuck even when it was still working. We explored progress indicators, match and phase counters, resumable/checkpointed batches and periodic save updates so a long season wasn't an opaque wait.
+
+One RC4 Chromium test completed a **153-fixture Vitality Blast** tournament in one browser run, including a button click. Repeated attempts then stalled or timed out. **One success was not enough to certify repeatability.** Performance work on historical edition commentary and cached records followed, but active editions had to remain uncached and correctly mutable.
+
+### Current squads mattered more than exhaustive historic seasons
+
+In October the user explicitly prioritised **present-day squads** over reconstructing every historical season: if a 2026/27 squad was difficult or speculative, use the most recent verified preceding season and label it correctly.
+
+The **Competition Atlas / Current Squads** direction responded to an awkward World Pool fact: the catalogue could contain thousands of identities and season snapshots without ensuring that a current IPL, County Championship, Ranji Trophy or Vijay Hazare roster was genuinely reachable and complete.
+
+The work included:
+- Team/competition/country filters and current-squad-first browsing.
+- Exact links between World Pool team records and available squad snapshots.
+- England's County Championship team references and season-linked fallbacks.
+- Current Indian domestic evidence and clearly marked missing names or partial squads.
+- Hundred and BBL franchise, identity and fixture consistency.
+- Protection against duplicate squad members and silent replacement of user-edited teams.
+- Refusal to label source-only 2026/27 data as authoritative active contracts.
+
+There were source-backed examples where a real 17-player official squad resolved to **only fifteen exact known identities**. The correct behaviour was to offer a labelled fifteen-player subset and record the two missing names, not fabricate their profiles.
+
+This also explained why the user kept requesting that we inspect **every page**: a correct World Pool hidden behind a truncated 100-item list, a broken bowling-stat table or an obscure tournament hub is still a broken player experience.
+
+### PlanetCricket sharing became its own product surface
+
+The owner wasn't just interested in seeing cricket privately. CricSim should allow people to **run a forum league and post it convincingly**: the complete match, every delivery, an ordered story, scoreboard, squads, fixture lists, standings, player stats and tournament identity.
+
+The **normal BBCode** path was deliberately separated from the more ambitious custom-styled one. Normal XenForo markup should work **without waiting for a site administrator**. A longer commentary transcript can be split across sensible forum post lengths while retaining sequence; a result should come after the proper match build-up, not in the header.
+
+The richer **28 custom PlanetCricket tags** and LESS styles were a separate installation package for the forum administrator. A development branch experimented with forum-theme tokens rather than hard-coded colors. Later user-customizable **HEX accents and dropdown colors** were added to the player exporter. These publisher controls should not change ball results or saved match facts.
+
+A specific forum-platform change also affected table formatting: a user reported that **[TABLE=collapse]** needed to become **[TABLE]** in raw BBCode to work under the upgraded PlanetCricket. This was a useful reminder that site markup compatibility lives outside the cricket engine and can change after release.
+
+### DRS was more than a popup after LBW
+
+Decision Review System work began with source evidence on **actual recorded player reviews** in Cricsheet and ICC playing conditions, not simply a random percentage of LBW decisions being overturned.
+
+The prototype distinguished player reviews and umpire referrals, success/retention, batting versus bowling-side belief, appeal eligibility, match format and year applicability. A useful DRS feature must do several things together:
+- Decide an appeal at the **correct delivery**.
+- Charge an unsuccessful team review only under the selected rules.
+- Recognize eligible **LBW, caught behind and bat-pad** review contexts.
+- Preserve the scorer's actual dismissal and bowling credit.
+- Include the review naturally in chronological commentary and at the right place in post-match scorecards.
+- Carry Test review resources through innings according to the selected rule settings.
+- Support **Off**, broad review and selected review-type modes without changing non-DRS matches.
+
+Early DRS branches were source/rules prototypes, **not** a finished game integration. RC8 and its later RC8.8 package moved the feature toward a real full-HTML Match Centre and tournament/Quick Match experience. The browser/playtest evidence improved, but exact advanced physics, review frequencies and save/reopen behaviour remained active testing topics.
+
+No full commercial ball-tracking simulation was added; DRS used game state, simulated review evidence and playing-rule logic. Claiming “Hawk-Eye physics” would have been false.
+
+### RC6 → RC7 → RC8.8: packaging and recoverability mattered
+
+Public downloads were sometimes larger than the tool upload path could handle. We had **RC8.8 as a roughly 8.04 MB HTML file** and a **native RC9.0 Windows executable around 14.23 MB** in earlier candidate work. Attempts to move large binaries through ChatGPT/GitHub were sometimes interrupted. Branches containing split HTML payloads exist for this reason—**they are build transport, not new game features**.
+
+**RC6/RC7** focused on whether browser persistence failed safely: a transaction must complete before cached backup data or legacy keys are discarded. A no-op or failed IndexedDB write isn't a successful save because the function returned. **RC7.1** consolidated several storage guards and targeted regressions.
+
+**RC8.8** combined DRS, Match Centre, fixes for tournament completion, restoration safeguards and Sim All checkpoints in an integrated standalone HTML candidate. It was significant because it joined many previously separate experiments into a game people could actually play.
+
+**The lesson of mid-October:** building a cricket engine and building a distributable *simulator product* are different projects. Reliable controls, correct player data, recoverable saves, non-spoiling reports and navigable seasons are all part of gameplay.
+
+
 ## Evidence and dating notes
 
 The main October/November dates are grounded in dated **v11.63–v11.98 validation reports**, **v12 RC/P8–P12 development records**, and the **89 current branch-tip / 68 PR** inventory of the private HFCricSim repository. The early June foundation is recorded in historical conversations and an engineering dossier; the July/August dates come from archival source-file inventory. The September-to-November testing history is separately documented in **[Validation History](./VALIDATION_HISTORY.md)**.
