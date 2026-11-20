@@ -2,6 +2,8 @@
 
 **Platform:** Offline HTML game for desktop Chrome/Edge · **Status:** Alpha playtest.
 
+**How we got here:** [Read the May–November feature-development timeline](./FEATURE_DEVELOPMENT_TIMELINE.md), including the rejected ideas and experiments that informed this Alpha.
+
 ## Core systems
 
 - **Matches:** T20, ODI, Test, FC, T10, The Hundred and custom-over formats, simulated delivery by delivery.
