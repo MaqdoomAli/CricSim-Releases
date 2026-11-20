@@ -675,6 +675,154 @@ Public downloads were sometimes larger than the tool upload path could handle. W
 **The lesson of mid-October:** building a cricket engine and building a distributable *simulator product* are different projects. Reliable controls, correct player data, recoverable saves, non-spoiling reports and navigable seasons are all part of gameplay.
 
 
+
+## Diary 8 — 23 October to early November: statistics, commentary and "does this feel like a game?"
+
+At this stage the basic feature checklist looked impressive. Yet the user's questions became more demanding: **Is the bowling stats page wrong? What about the other pages? Why does Sim All feel frozen? Does the commentary reveal the winner too early? Does an interesting event read like something actually happening? Are we making cricket better or just accumulating menus?**
+
+These were not side issues. They were signals that the simulator was transitioning from a personal engineering tool into something strangers would try to understand and enjoy.
+
+### The 13-page content audit and the limits of visual polish
+
+The owner asked to list the simulator's pages, inspect them for similar problems to a broken bowling-stat view and revisit what to **add, remove or modify** in each. That is different from a color-theme exercise. It asks whether a screen has the right information, whether records reconcile, and whether the user can navigate from a player to his squad, performance, match and tournament context.
+
+The audit work went through the existing home, setup, player/team, statistical, history and competition surfaces and progressively moved toward a unified **Match Centre and Tournament Hub** style. Earlier theme experiments were useful, but an attractive panel that hides the fixtures or removes a key stat is a regression.
+
+The Match Centre's **blue/orange layout and team accents** were only the visible layer. It also needed meaningful score alignment, chronological deliveries, batting/bowling cards, full commentary and links back into a tournament. Several hover/navigation regressions were caught as the designs evolved.
+
+### P8: commentary had to become a record of play
+
+A complaint about the existing commentary was precise: the line should visibly contain the **delivery number, bowler, batter, outcome and description**. A sample was “0.1 Jasprit Bumrah to Travis Head — 4 — Head sliced it away on the first ball.” The owner emphasized that this was **an example, not a demand to compress every delivery into one sentence**.
+
+P8.5 onward separated **what happened** from **how it is described**. A zero, single, boundary, wide, no-ball, bye, appeal, wicket and review should be presented with enough information to follow the match. A saved score should not be concealed behind a generic phrase or revealed prematurely by a result card.
+
+The system needed to handle:
+- Ball coordinates and outcomes across T20, ODI, T10 and Hundred (whose five-ball sets require their own notation).
+- Test/FC scoreboards and commentary at session or day intervals without future knowledge.
+- Correct run-out end/credited fielder and dismissal attribution.
+- Wickets, partnerships, bowling changes, target equations and phase-specific language.
+- Full delivery/event data in match reports; no truncated account presented as a “complete” replay.
+- DRS reviews at the delivery that triggered the appeal, not as an afterthought below the final result.
+
+**P8.6** reported **25 Chromium-completed fixtures and 7,658 delivery events**, including review linkage. **P8.7** used **26 matches/8,660 deliveries**, with checks for targeted run-out descriptions and reduced repeated commentary. **P8.8** added structured fact tagging and UI zone corrections, reporting **26 matches/8,932 deliveries** and preserved same-seed score tuples. **P8.9** still reported repeated lines, despite improving them. The exact match suites share seeded cases across iterations; they are not four completely independent batches of 25 brand-new cricket conditions.
+
+The project's answer to “do we need a physics system?” was nuanced: **not necessarily a full 3D cricket physics engine** to produce decent text. But a narrator shouldn't claim a ball was driven through cover if the match record contains no reliable shot/placement evidence. P8's structured cues and conservative wording were a compromise between richer writing and factual integrity. Some attractive generated descriptions were rejected or made conditional because they implied physical facts the engine had not actually simulated.
+
+This is one reason we treated commentary as more than cosmetic: inconsistent narration destroys confidence in the scorecard, even when the underlying runs are mathematically correct.
+
+### "No spoilers" became a cross-feature rule
+
+The issue appeared in several places: a report with the winner in the first heading, a Match Centre opening directly on a result, a DRS decision described before the ball, an innings story quoting a final century that hadn't happened, and a tournament note referring to fixtures not yet played.
+
+The fix was **chronological information boundaries**. For a completed match, all events may already be stored; that doesn't mean the viewer should be shown everything at the first instant. The report and interface decide which recorded facts are visible at which stage, without re-simulating the cricket.
+
+The same idea later supported qualification analysis: a mathematical statement that a team *could* qualify is valid; pretending to know a future result or NRR swing is not.
+
+### P9.3: qualification should be mathematical, not a guess
+
+By **2 November**, the Tournament Hub's **Qualification Analyst** could enumerate all possible win/loss/tie-or-no-result points outcomes for suitably small, fully known group schedules. A four-team example began with **729** remaining outcome combinations; after two matches, **81** combinations remained.
+
+It could identify a team that was already secure on points, a team that could still make it, one dependent on tiebreakers, or a team mathematically eliminated from a strict-points path. It also inspected combined championship/divisional tables without incorrectly describing provisional stage results as confirmed progression.
+
+The major safety boundary was the same as elsewhere: **do not invent NRR, future innings scores or qualification probabilities**. The tool could explain a route but not pretend to predict cricket.
+
+The owner reported that P9.3 **worked** and asked to beautify it. That acceptance gave the feature a useful baseline. The natural next question was not “can we calculate even more combinations?” but **“which upcoming fixtures actually matter to my team?”**
+
+### P9.4: turn the analyst into a decision-making aid
+
+The **Decision Centre** was proposed and then developed as a read-only layer above P9.3. Given a selected team, it could highlight fixtures whose result materially affects qualification and describe combinations of wins, defeats or tied/no-result outcomes that leave points routes possible.
+
+It had to respect the P9.3 preflight. If the schedule, stage graph, bonus points or unknown entrants make exhaustive outcomes unsupported, the Decision Centre should **show a limitation**, not invent a confident probability.
+
+This is a genuine gameplay upgrade. A table tells you who has 12 points. A good qualification interface tells you **why a particular upcoming match is important** and what conditional route remains to a final—without playing the match for you.
+
+### The tournament was becoming a living competition
+
+At the same time, the existing edition history and commentary memory meant fixtures could carry background: a defending champion, a recurring rivalry, a player with records in the same tournament family. These must be recorded past facts, never story-generator invention.
+
+The combined result was a shift from **a result-generation program** to **a commissioner-led cricket world**:
+- It has a past that is preserved.
+- It has a present the player can navigate.
+- It has a future fixture schedule the analyst can reason about.
+- It doesn't know those future match results before the engine plays them.
+
+That was the real significance of P8/P9, beyond any one panel.
+
+## Diary 9 — Late October to 14 November: the desktop experiment and the road to a trustworthy alpha
+
+### RC9: the native-desktop question wasn't an excuse to start over
+
+Moving to Windows was attractive: a native app could have a more predictable save location, SQLite history, checkpoints and potentially better file-management ergonomics. But rebuilding the match engine as a new C# or Go game would risk discarding months of cricket calibration and parser compatibility.
+
+The owner's direction was explicit: **move the existing HTML/JavaScript gameplay intact**. The RC9 desktop experiment wrapped the familiar UI in a **Go-based local host** with a SQLite persistence layer, snapshot/checkpoint endpoints and integrity guards. There were Windows candidate EXEs; they were not a replacement for stable v11.66 or proof of finished user-universe migration.
+
+The **one-step migration** goal sounded simple: open the desktop game, choose the old universe, and continue with all teams, players, history, tournaments, stats and settings. But the existing HTML's browser-profile storage cannot be read automatically by an arbitrary native app. This required a **full-universe JSON export from the original browser**, schema preflight, explicit user permission and readback.
+
+**RC9.1** made that constraint honest. The guided transfer validated collection types, identity uniqueness, hashes when present and SQLite health before allowing the import. A full replacement required explicit consent and a safety path, especially for legacy backups without hashes. The native pilot also needed to guard against accidental resets, interrupted writes and sidecar/checkpoint corruption.
+
+The repository documents numerous local acceptance checks for source and byte-level rollback, but also repeated **NO-GO** decisions: the user's genuine old world had not yet been proven through full Windows import, process exit and cold restart, and very large live saves had not completed an exhaustive field acceptance.
+
+Those limits directly influenced the final distribution choice. **The first public PC release would be the established offline HTML, not a prematurely certified native EXE.**
+
+### P10: the engine realism investigation returned to player ratings
+
+After major UI and competition improvements, the owner asked to compare all formats with **Cricsheet**, not just trust our T20 headline scoring averages. The P10 work began tracing the route from an imported player profile to the actual selected XI and then to the ball-level batting/bowling skills.
+
+**P10.1** found concrete rating/import wiring issues:
+- Some older CSV attributes stored strings where format-rating objects were expected.
+- A constructor argument position could shift a player's format-specific label into the wrong field.
+- Current pack profile snapshots could mis-wire the intended format override.
+- An apparent batting or bowling imbalance might therefore originate from **which rating or profile was selected**, not from the physical ball probabilities.
+
+The later P10 stages examined modern national squads, calibrated current-format cohorts and reviewed the Hundred against real playing-XI evidence. **P10.4** parsed around **23,133 Cricsheet JSON files / 50,954 non-super-over innings**, separating formats, domestic versus international, sex, era and innings phase. Those are **reference records**, not 23,133 simulated CricSim matches.
+
+The **P10.5 national-player acceptance** used real game match functions across T20, ODI, Hundred, Test and first-class. **P10.7** separately compared approximately **408 source-backed Hundred simulations per candidate engine** with real 2026 XI compositions and holdout matches. The central lesson was not “we found one multiplier.” It was **data provenance, appearance opportunity, bowling allocation, player skill and team context** must be analysed together.
+
+At one point the owner argued that the culprit was **ratings rather than the engine**. That was a useful hypothesis, not a reason to ignore the engine. The correct process was to trace the rating pipeline, build matched comparisons and preserve otherwise realistic scoring paths.
+
+### Historical-era research challenged easy assumptions
+
+The P10 and v11.9x streams also pushed back against simplistic ideas such as “every decade has a steady scoring increase.” Actual scoring history is not monotonic. A 2026 men's Hundred match, a 2006 T20 international and a 2015 ODI are distinct contexts; changes to domestic roster quality and selection can be as important as era-wide scoring curves.
+
+We preferred **measured cohorts, labelled incomplete data and no blanket auto-ratings** over artificial uniform historical realism. A manager could still stage fantasy matchups without pretending they were statistically exact reconstructions of the past.
+
+### P11: define what a public release has to prove
+
+As Alpha approached, the owner asked to complete outstanding work quickly enough for playtesters while keeping the game intact. A long feature checklist was no longer an acceptable shipping gate.
+
+The **P11 acceptance matrix** required actual browser startup, navigation, Quick Matches in all main formats, real saved scorecards and statistics, tournament completion, DRS and BBCode outputs, backup/import safety and native restoration where relevant.
+
+Local scripts passed dozens of targeted checks, but they were **not passed off as a full 8 MB application browser acceptance** when browser navigation or the source artifact wasn't available in the test environment. The project learned to label tests precisely: **unit test, source integration, browser smoke, full real-engine run, native process restore, or public field acceptance**.
+
+This was also when the user insisted that **GitHub Actions should be used for uploads/publication, not repeated expensive hosted tests**. Development reports distinguish local Chromium/Node tests from GitHub-hosted runs. A green workflow badge is not a substitute for opening a real old save in the real game.
+
+### P12: injury and retirement laws exposed unusual corner cases
+
+On **13–14 November**, the owner spotted a major missing category: batters can retire voluntarily or due to injury, and an injured bowler might leave the field or be unable to finish an over. The cricket laws depend on whether the batter retired **hurt** or **out**, whether they are fit to return, when a vacancy arises, and which ICC/MCC/domestic playing conditions govern the match.
+
+The design discussion deliberately ruled out a dramatic injury-management minigame. The user wanted **rare, plausible incidents**, not an injury popup every match. There was no desire to have the game randomly weaken an entire career, and no requirement for the manager to nominate a named reserve fielder before every game.
+
+The toughest edge case was **a playing squad containing exactly eleven members**. If a bowler in such a squad becomes unavailable, you can't conjure a twelfth teammate and then pretend the fielding replacement can also bowl. The accepted rule was:
+- **Only eleven total squad members:** no spontaneous bowler injury that would create an unresolvable bowling shortage.
+- **Batting injuries still possible:** a batter may retire hurt and later return when legally permitted.
+- **With genuine eligible reserves:** choose a substitute fielder, preferentially a good fielder, **from the actual squad**.
+- **No imaginary bowling rights for the 12th fielder:** a member of the nominated XI must take any remaining over/load, within the format's legal quota.
+- **Retired out:** a dismissal without a credited bowler wicket, and no ordinary same-innings return.
+- **Retired hurt:** not a wicket; possible return depends on fitness, vacancy and governing rule profile.
+
+Test and first-class return/carryover behaviour added further subtleties. One P12E fix prevented a batter who had *just retired hurt* from instantly replacing themselves in the vacancy caused by that same retirement. Another made automatic risk roll once per **legal ball counter**, not repeatedly on wides/no-balls.
+
+An early **P12D** prototype passed isolated rules/controller checks but was **not** a complete public integration. **P12E Alpha 1.1** wired the medical panel into standard Quick Matches. It still wasn't correct to say all tournaments had P12 just because Quick Match worked. That next step became Alpha 1.3.
+
+### What had actually changed by mid-November
+
+CricSim had acquired far more than new scoring tricks. It now had a real choice to make about release discipline:
+- Wait for a perfectly calibrated, native, all-format and all-save-path game—possibly indefinitely.
+- Or publish the most coherent **offline HTML alpha**, with the core match and tournament engine usable, transparent known limitations, sensible backups and genuine external playtest feedback.
+
+The owner chose the second approach, without abandoning calibration or data integrity. That is why **Alpha** is a meaningful word here rather than an apologetic marketing label.
+
+
 ## Evidence and dating notes
 
 The main October/November dates are grounded in dated **v11.63–v11.98 validation reports**, **v12 RC/P8–P12 development records**, and the **89 current branch-tip / 68 PR** inventory of the private HFCricSim repository. The early June foundation is recorded in historical conversations and an engineering dossier; the July/August dates come from archival source-file inventory. The September-to-November testing history is separately documented in **[Validation History](./VALIDATION_HISTORY.md)**.
