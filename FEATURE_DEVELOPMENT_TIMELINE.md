@@ -1,11 +1,11 @@
 # CricSim — From the First Simulator to Alpha 1.4
 ## A feature-by-feature development history | May–20 November 2026
 
-**Starting point:** A personal offline cricket simulator, already playable by June.  
+**Starting point:** An existing offline cricket simulator actively expanded by 1 June 2026, with a dated v11.6 IPL 2026 HTML snapshot.  
 **Public milestone:** CricSim v12 Alpha 1.4, the first public PC playtest, released as a self-contained HTML game for desktop Chrome/Edge.  
 **This document:** What changed, why we changed it, what was retained or replaced, and which branches remained experiments.
 
-> **Dating note:** The developer reports starting work in **May 2026**, but the exact date, file and feature set of the *very first* prototype have not been recovered. We have a documented working foundation by June, a modular-source archive dated July, another source snapshot in August, dated September validation reports, and much stronger source/branch records from October onward. Dates below represent the earliest documented milestone or report, **not necessarily the day a feature was first conceived or written**.
+> **Dating note:** The developer reports starting work in **May 2026**, but the exact date, file and feature set of the *very first* prototype have not been recovered. We have an inspected **v11.6 IPL 2026** HTML snapshot archived as 1 June, a modular-source archive dated July, another source snapshot in August, dated September validation reports, and much stronger source/branch records from October onward. Dates below represent the earliest documented milestone or report, **not necessarily the day a feature was first conceived or written**.
 >
 > **Release note:** A feature appearing in an experimental branch does **not** automatically mean it shipped in Alpha 1.4. Status is explicitly distinguished below. The first public “PC release” is an **offline HTML/JavaScript application opened in a PC browser**, not a certified native Windows EXE.
 
@@ -32,7 +32,13 @@ The important change wasn't simply “more features.” CricSim moved from **sim
 
 **May 2026 — Beginnings (owner-reported, exact prototype unverified).** Work begins on a self-contained cricket simulator. No verified May source snapshot has been recovered, so this history does **not** invent a v1 release date or a precise May feature checklist.
 
-**By 3 June — A real working foundation already existed.** Historical development planning describes an offline HTML/JavaScript app with a **live delivery engine, teams and squads, cricket formats, venues/conditions, tournaments, scorecards and statistics**. These were parts of the existing application being reorganised, not brand-new June inventions.
+**1 June — A real working v11.6 build already existed.** The archived `CricSimv11_6_IPL2026_v3.html` is an actual offline HTML application, not just a proposal. Its navigation already contains **Quick Match, Tournament, Teams & Squads, Archetypes, Match History, All-time Statistics and Documentation**. Quick Match exposes T20, ODI, Test, T10, The Hundred and custom overs, pitch, weather, toss, named team/squad selection and quick presets. The Tournament homepage advertises League, Knockout, IPL, World Cup and Swiss competitions. Batters and bowlers have editable **separate 1–20 skills**, archetypes and pace/spin style. The home screen documents an earlier v10.1 **unified Pitch×BowlerType outcome distribution** that replaced an older two-pass scoring/wicket model. This tells us the June game was already substantial—and that **we were improving an existing simulator, not starting a match engine from a blank file**.
+
+**1–2 June — Your first documented product constraints.** The conversation says to improve the *acquired/existing simulator* rather than replace it. You specified that a commissioner must be able to **manually edit player ratings/skills during seasons and tournaments**, while **Test, ODI and T20** behaviour should be audited rather than assumed. On 2 June you explicitly rejected **automatic ageing, progression, regression, retirement and automatic rating changes**. Tournament statistics had to be **distinct from career/all-time totals**, with cross-edition aggregation optional and transparent.
+
+**A revealing June storage limitation:** The v11.6 source kept `teams`, `matches`, `pstats` and `tournaments` in browser `localStorage` (`cs4_*` keys), and wrote only the **latest 100** Quick Match records when saving. That primitive, browser-profile-bound persistence is part of why months later we were building IndexedDB migration, full-universe exports and portable save-folder snapshots.
+
+**The starting cricket engine was already opinionated:** The archived v11.6 home page describes pitch-specific probability tables with outcomes [dot, 1, 2, 3, 4, 6, wicket], 1–20 player skills influencing outcome weights, automatic pace/spin attack selection, chase urgency, and corrected run-out end logic. A newly created player could already be a Basher, Dasher, Technician, Anchor, Blocker or Pinch Hitter. These are **baseline capabilities visible in the June file**, not September inventions.
 
 That foundation set decisions that still shape the release:
 
@@ -41,11 +47,13 @@ That foundation set decisions that still shape the release:
 - The match engine, tournament state, scorecards and statistics should agree on what happened.
 - Refactoring or adding a PC host must **not destroy working saves or rebuild cricket mechanics from scratch**.
 
-**What is not known:** The first playable file's name/version, whether all modern formats already worked then, and the exact order in which the initial match and tournament screens appeared. An earlier architecture proposal divided the project into engine, formats, captaincy, tournaments, roster/rating data, venues, statistics, commentary, interface, history and testing; that proposed folder plan is evidence of **design direction**, not proof each part was implemented in June.
+**What is not known:** The first prototype from May, the exact date the inherited engine's v10.1 and v11.6 changes were written, and which of the June controls already had comprehensive regression coverage. The June v11.6 artifact demonstrates early **screen-level features** but is not proof every format or tournament path was already correct. An earlier architecture proposal divided the project into engine, formats, captaincy, tournaments, roster/rating data, venues, statistics, commentary, interface, history and testing; that proposed folder plan is evidence of **design direction**, not proof each part was implemented in June.
 
 ## Chapter 2 — July to August: from one game to a world-cricket system
 
 **19 July — World cricket beyond quick matches.** An archived “World Cricket Research Project” started mapping national and domestic competition structures, governing bodies, relationships, current and historical competitions. This was **reference research**, not a claim that every competition was instantly playable. It anticipated later domestic templates, multi-stage qualification and the international World Pool.
+
+**19 July — World Cricket Research Volume 1.** A separately maintained research volume focused first on ICC governance, Indian cricket administration, domestic and franchise competitions, state associations and the cricket development pathway. You wanted **one continuous, carefully researched document**, not a premature database or a parade of disconnected proposals; this informed later World Pool and domestic-competition research but was not itself a playable feature.
 
 **19 July — Modular source archive.** A separate archival inventory records a **cricsim-modular-source.zip** dated 19 July 2026. By then the project had outgrown a few ad-hoc scripts and was being organised for incremental changes.
 
